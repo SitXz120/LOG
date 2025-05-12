@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Moji Leaderboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .card-glow {
+      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
+      border-radius: 1rem;
+      border: none;
+    }
+
+    .table th, .table td {
+      vertical-align: middle;
+    }
+
+    .btn-glow {
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ✅ Navbar -->
+<nav class="navbar navbar-dark bg-dark shadow px-3 justify-content-between">
+  <a href="/" class="navbar-brand fw-bold">🌐 Moji Leaderboard</a>
+  <div id="user-nav">
+    <!-- ปุ่มจะถูกเปลี่ยนโดย JS -->
+  </div>
+</nav>
+
+<!-- ✅ Modal -->
+<div class="modal fade" id="tokenModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">🔑 Token ของคุณ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="fw-bold" id="tokenValue"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Modal Register/Login -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">🎟️ สมัคร / Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <input type="text" id="authUsername" class="form-control mb-3" placeholder="ชื่อผู้ใช้ของคุณ">
+        <button class="btn btn-success mb-2 w-100" onclick="registerUser()">✅ สมัครใหม่</button>
+        <button class="btn btn-primary w-100" onclick="loginUser()">🔐 Login</button>
+        <p class="mt-3 text-danger fw-bold" id="authStatus"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Main Container -->
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-info shadow">📊 Leaderboard</h1>
+  </div>
+
+  <!-- ✅ Online/Offline Summary -->
+  <div class="row text-center mb-4">
+    <div class="col">
+      <div class="alert alert-info fw-bold fs-5 shadow">🟢 ออนไลน์: <span id="online-count">0</span> คน</div>
+    </div>
+    <div class="col">
+      <div class="alert alert-secondary fw-bold fs-5 shadow">🔴 ออฟไลน์: <span id="offline-count">0</span> คน</div>
+    </div>
+  </div>
+
+  <!-- ✅ Table -->
+  <div class="table-responsive card-glow">
+    <table class="table table-dark table-hover table-bordered mb-0 rounded">
+      <thead>
+        <tr class="text-center">
+          <th>#</th>
+          <th>ชื่อผู้เล่น</th>
+          <th>จำนวน Shooms</th>
+          <th>สถานะ</th>
+        </tr>
+      </thead>
+      <tbody id="score-table"></tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Total Score -->
+  <div class="alert alert-success text-center fw-bold fs-4 mt-4 shadow" id="total">
+    💰 รวมทั้งหมด: 0 Shooms
+  </div>
+
+  <!-- ✅ Reset Button -->
+  <div class="text-center mt-3">
+    <button class="btn btn-danger btn-glow fw-bold" onclick="resetScores()">🗑️ รีเซ็ต Shooms ทั้งหมด</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    async function fetchScores() {
+    const token = localStorage.getItem('userToken');
+    if (!token) return;
+
+    const res = await fetch('/data', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+    });
+
+    const scores = await res.json();
+    if (!scores || scores.length === 0) return;
+
+    const table = document.getElementById('score-table');
+    const total = document.getElementById('total');
+    const onlineCount = document.getElementById('online-count');
+    const offlineCount = document.getElementById('offline-count');
+
+    table.innerHTML = '';
+    let totalScore = 0;
+    let online = 0;
+    let offline = 0;
+
+    scores.forEach((item, i) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td class="text-center">${i + 1}</td>
+        <td>${item.player}</td>
+        <td class="text-end">${Number(item.score).toLocaleString()}</td>
+        <td class="text-center">
+            ${item.online
+            ? '<span class="badge bg-success">ออนไลน์</span>'
+            : '<span class="badge bg-secondary">ออฟไลน์</span>'}
+        </td>
+        `;
+        table.appendChild(tr);
+        totalScore += Number(item.score);
+        item.online ? online++ : offline++;
+    });
+
+    total.innerText = `💰 รวมทั้งหมด: ${totalScore.toLocaleString()} Shooms`;
+    onlineCount.innerText = online;
+    offlineCount.innerText = offline;
+    }
+
+  function openAuthModal() {
+    document.getElementById('authUsername').value = '';
+    document.getElementById('authStatus').innerText = '';
+    new bootstrap.Modal(document.getElementById('authModal')).show();
+  }
+
+  async function registerUser() {
+    const username = document.getElementById('authUsername').value.trim();
+    const status = document.getElementById('authStatus');
+    if (!username) {
+      status.innerText = "กรุณาใส่ชื่อ";
+      return;
+    }
+
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("userToken", data.token);
+      location.reload();
+    } else {
+      status.innerText = `❌ ${data}`;
+    }
+  }
+
+  async function loginUser() {
+    const username = document.getElementById('authUsername').value.trim();
+    const status = document.getElementById('authStatus');
+    if (!username) {
+      status.innerText = "กรุณาใส่ชื่อ";
+      return;
+    }
+
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      localStorage.setItem("userToken", data.token);
+      location.reload();
+    } else {
+      status.innerText = `❌ ${data}`;
+    }
+  }
+
+    function logout() {
+    localStorage.removeItem('userToken');
+    checkLogin(); // แทน location.reload()
+    }
+
+    async function checkLogin() {
+    const token = localStorage.getItem('userToken');
+    const nav = document.getElementById('user-nav');
+
+    if (!token) {
+        // ✅ แสดงปุ่ม Login ถ้ายังไม่ได้ Login
+        nav.innerHTML = `
+        <button class="btn btn-outline-light btn-sm" onclick="openAuthModal()">🎟️ Register / Login</button>
+        `;
+        return;
+    }
+
+    const res = await fetch('/me', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+    });
+
+    if (!res.ok) {
+        // ✅ Token ผิดหรือหมดอายุ → แสดงปุ่ม Login อีกครั้ง
+        localStorage.removeItem("userToken");
+        nav.innerHTML = `
+        <button class="btn btn-outline-light btn-sm" onclick="openAuthModal()">🎟️ Register / Login</button>
+        `;
+        return;
+    }
+
+    const data = await res.json();
+    nav.innerHTML = `
+        👤 <strong>${data.username}</strong>
+        <button class="btn btn-warning btn-sm ms-2" onclick="showToken()">🔑 Token</button>
+        <button class="btn btn-outline-danger btn-sm ms-2" onclick="logout()">🚪 Logout</button>
+    `;
+    }
+
+    function showToken() {
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+        alert("ไม่พบ Token");
+        return;
+    }
+
+    document.getElementById('tokenValue').innerText = token;
+    new bootstrap.Modal(document.getElementById('tokenModal')).show();
+    }
+
+    async function resetScores() {
+    const confirmReset = confirm("⚠️ ต้องการรีเซ็ต Shooms ทั้งหมดหรือไม่?");
+    if (!confirmReset) return;
+
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+        alert("คุณยังไม่ได้ Login");
+        return;
+    }
+
+    const res = await fetch('/reset', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+    });
+
+    if (res.ok) {
+        fetchScores(); // รีโหลดใหม่
+    } else {
+        alert("เกิดข้อผิดพลาดในการรีเซ็ต Shooms");
+    }
+    }
+
+  fetchScores();
+  setInterval(fetchScores, 3000);
+  checkLogin();
+</script>
+
+</body>
+</html>

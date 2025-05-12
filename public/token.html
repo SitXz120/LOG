@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>🎫 Token</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-dark text-white text-center py-5">
+  <div class="container">
+    <h1 class="mb-4">🎟️ Token Manager</h1>
+    <input id="username" class="form-control w-50 mx-auto" placeholder="ชื่อของคุณ"><br>
+    <button class="btn btn-success me-2" onclick="register()">🆕 สร้าง Token ใหม่</button>
+    <button class="btn btn-info" onclick="login()">🔐 รับ Token เดิม</button>
+    <p id="status" class="mt-3 text-danger fw-bold"></p>
+  </div>
+
+  <!-- ✅ MODAL แสดง Token -->
+  <div class="modal fade" id="tokenModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-dark">
+        <div class="modal-header">
+          <h5 class="modal-title">🎫 Token ของคุณ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="fw-bold" id="tokenValue"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    async function register() {
+      const username = document.getElementById('username').value;
+      if (!username) return showError("กรุณาใส่ชื่อ");
+
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        showModal(data.token);
+      } else {
+        showError(data);
+      }
+    }
+
+    async function login() {
+      const username = document.getElementById('username').value;
+      if (!username) return showError("กรุณาใส่ชื่อ");
+
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        // ✅ ไปหน้า index.html
+        localStorage.setItem("userToken", data.token);
+        window.location.href = "/";
+      } else {
+        showError(data);
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById('status').innerText = msg;
+    }
+
+    function showModal(token) {
+      document.getElementById('status').innerText = "";
+      document.getElementById('tokenValue').innerText = token;
+      new bootstrap.Modal(document.getElementById('tokenModal')).show();
+    }
+  </script>
+</body>
+</html>
