@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 
 const USERS_FILE = './users.json';
-const TIMEOUT = 30000;
+const TIMEOUT = 15000;
 let scores = []; // ✅ ใช้ object แทน array
 
 app.use(bodyParser.json());
@@ -59,20 +59,18 @@ app.post('/roblox', (req, res) => {
 
   const name = playerName || user.username;
 
-  // ✅ ตรวจสอบว่าผู้เล่นนี้เคยมีอยู่ในตารางหรือยัง
+  // ✅ ตรงนี้แยก lastSeen ตาม player
   const existing = scores.find(s => s.player === name);
-
+  
   if (existing) {
-    // 🔁 ถ้ามีอยู่แล้ว ให้ update ค่า score และเวลา
     existing.score = score;
-    existing.lastSeen = Date.now();
+    existing.lastSeen = Date.now(); // ⏰ เวลาของตัวนี้
   } else {
-    // ➕ ถ้ายังไม่มี ให้เพิ่มใหม่
     scores.push({
       player: name,
-      username: user.username, // 👈 เก็บ token-owner name
+      username: user.username,
       score,
-      lastSeen: Date.now()
+      lastSeen: Date.now() // ⏰ สร้างใหม่พร้อมเวลา
     });
   }
 
@@ -89,18 +87,18 @@ app.post('/data', (req, res) => {
   if (!user) return res.status(401).send("Invalid token");
 
   const now = Date.now();
+  const TIMEOUT = 30000;
 
   const entries = scores
-    .filter(s => s.username === user.username) // ✅ เฉพาะคนที่ส่งมาด้วย token นี้
+    .filter(s => s.username === user.username)
     .map(entry => ({
       player: entry.player,
       score: entry.score,
       online: now - entry.lastSeen <= TIMEOUT
     }));
 
-  res.json(entries);
+  res.json(entries); // ✅ <-- สำคัญที่สุด!
 });
-
 
 // ✅ ดึงชื่อจาก token
 app.post('/me', (req, res) => {
