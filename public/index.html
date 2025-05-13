@@ -255,13 +255,12 @@
             </thead>
             <tbody id="earningTable"></tbody>
           </table>
-          <div class="text-end fw-bold fs-5">รวมรายได้ทั้งหมด: <span id="totalIncome">0</span> บาท</div>
+          <div class="fw-bold fs-5 mb-3 text-end">💸 รวมรายได้: <span id="totalIncome">0</span> บาท</div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 
 <!-- ✅ Main Container -->
 
@@ -641,7 +640,7 @@
   }
   
   // รีคำนวณเมื่อกรอกเรทใหม่
-  document.getElementById("shoomRate").addEventListener("input", openEarningModal);
+  document.getElementById("shoomRate").addEventListener("change", openEarningModal);
   
 </script>
 
