@@ -322,7 +322,7 @@
   
   local http = syn and syn.request or http_request or request
   if not http then
-      warn("[❌] Executor นี้ไม่รองรับ HTTP Request")
+      warn("[❌] Error")
       return
   end
   
