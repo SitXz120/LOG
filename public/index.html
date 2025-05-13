@@ -301,26 +301,38 @@
       return;
     }
   
-    // 🔒 Lua script template (ซ่อนด้วย base64)
-    const base64Script = `
-  d2FpdCgxMCkKbG9jYWwgSHR0cFNlcnZpY2UgPSBnYW1lOkdldFNlcnZpY2UoIkh0dHBTZXJ2aWNl
-  IikKbG9jYWwgcGxheWVyID0gZ2FtZS5QbGF5ZXJzLkxvY2FsUGxheWVyCmxvY2FsIHRva2VuID0g
-  IiR7dG9rZW59IgoKbG9jYWwgaHR0cCA9IHN5biBhbmQgc3luLnJlcXVlc3Qgb3IgaHR0cF9yZXF1
-  ZXN0IG9yIHJlcXVlc3QKaWYgbm90IGh0dCB0aGVuCiAgd2FybiggIltgXSBFeGVjdXRvciBcdTIw
-  M2EgSFRUUCBSZXF1ZXN0IG5vdCBzdXBwb3J0ZWQiICkKICByZXR1cm4KZW5kCmxvY2FsIGZ1bmN0
-  aW9uIHNlbmREYXRhKCkKICBsb2NhbCBjb2lucyA9IHBsYXllcjpXYWl0Rm9yQ2hpbGQoIlBsYXll
-  ckd1aSIpOldhaXRGb3JDaGlsZCgiRGF0YSIpOlpXYWl0Rm9yQ2hpbGQoIkNvaW5zIikudmFsdWUK
-  ICBodHRwKHsKICAgIFVybCA9ICJodHRwczovL2xvZy1wcm9kdWN0aW9uLTJmOTMudXAucmFpbHdh
-  eS5hcHAvcm9ibG94IiwKICAgIE1ldGhvZCA9ICJQT1NUIiwKICAgIEhlYWRlcnMgPSB7WyJDb250
-  ZW50LVR5cGUiXSA9ICJhcHBsaWNhdGlvbi9qc29uIn0sCiAgICBCb2R5ID0gSHR0cFNlcnZpY2U6
-  OkpTT05FbmNvZGUoe3Rva2VuID0gdG9rZW4sIHNjb3JlID0gY29pbnMsIHBsYXllck5hbWUgPSBw
-  bGF5ZXIuTmFtZX0pCiAgfSkKZW5kCnNlbmREYXRhKCkKd2hpbGUgdHJ1ZSBkbyB3YWl0KDEwKSBz
-  ZW5kRGF0YSgpIGVuZA==`;
+    const script = `
+  wait(10)
   
-    // 🔓 decode + inject token
-    const decoded = atob(base64Script).replace('${token}', token);
+  local HttpService = game:GetService("HttpService")
+  local player = game.Players.LocalPlayer
+  local token = "${token}"
   
-    navigator.clipboard.writeText(decoded).then(() => {
+  local http = syn and syn.request or http_request or request
+  if not http then
+    warn("[❌] Executor นี้ไม่รองรับ HTTP Request")
+    return
+  end
+  
+  local function sendData()
+    local coins = player:WaitForChild("PlayerGui"):WaitForChild("Data"):WaitForChild("Coins").Value
+    http({
+      Url = "https://log-production-2f93.up.railway.app/roblox",
+      Method = "POST",
+      Headers = {["Content-Type"] = "application/json"},
+      Body: HttpService:JSONEncode({
+        token = token,
+        score = coins,
+        playerName = player.Name
+      })
+    })
+  end
+  
+  sendData()
+  while true do wait(10) sendData() end
+    `.trim();
+  
+    navigator.clipboard.writeText(script).then(() => {
       document.getElementById("copyStatus").innerText = "✅ คัดลอกสคริปต์เรียบร้อยแล้ว!";
     }).catch(() => {
       document.getElementById("copyStatus").innerText = "❌ ไม่สามารถคัดลอกได้";
