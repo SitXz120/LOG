@@ -234,7 +234,10 @@
 
   <div class="row mb-4">
     <div class="col-md-4 text-start">
-      <button class="btn btn-danger btn-glow fw-bold w-100" onclick="resetScores()">🗑️ รีเซ็ต Shooms ทั้งหมด</button>
+      <button class="btn btn-danger btn-glow fw-bold w-100"
+              data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
+        🗑️ รีเซ็ต Shooms ทั้งหมด
+      </button>
     </div>
     <div class="col-md-4 text-center">
       <div class="alert alert-success fw-bold fs-5 mb-0 shadow" id="total">
@@ -416,31 +419,34 @@
     new bootstrap.Modal(document.getElementById('tokenModal')).show();
     }
 
-    async function resetScores() {
-    const confirmReset = confirm("⚠️ ต้องการรีเซ็ต Shooms ทั้งหมดหรือไม่?");
-    if (!confirmReset) return;
-
-    const token = localStorage.getItem("userToken");
-    if (!token) {
+    async function confirmResetScores() {
+      const token = localStorage.getItem("userToken");
+      if (!token) {
         alert("คุณยังไม่ได้ Login");
         return;
-    }
-
-    const res = await fetch('/reset', {
+      }
+    
+      // แสดงกำลังรีเซ็ต
+      document.getElementById("total").innerText = '♻️ กำลังรีเซ็ต...';
+    
+      const res = await fetch('/reset', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token })
-    });
-
-    if (res.ok) {
-        // ✅ เคลียร์ UI แบบทันที
+      });
+    
+      if (res.ok) {
         document.getElementById("score-table").innerHTML = '';
         document.getElementById("total").innerText = '💰 รวมทั้งหมด: 0 Shooms';
         document.getElementById("online-count").innerText = '0';
         document.getElementById("offline-count").innerText = '0';
-    } else {
+    
+        // ✅ ปิด Modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('resetConfirmModal'));
+        modal.hide();
+      } else {
         alert("เกิดข้อผิดพลาดในการรีเซ็ต Shooms");
-    }
+      }
     }
 
   fetchScores();
