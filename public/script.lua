@@ -25,4 +25,4 @@ local function sendData()
 end
 
 sendData()
-while true do task.wait(50) sendData() end
+while true do task.wait(30) sendData() end
