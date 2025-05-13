@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 
 const USERS_FILE = './users.json';
-const TIMEOUT = 15000;
+const TIMEOUT = 60000;
 let scores = []; // ✅ ใช้ object แทน array
 
 app.use(bodyParser.json());
