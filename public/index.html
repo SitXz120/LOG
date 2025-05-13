@@ -394,6 +394,7 @@
       tr.innerHTML = `
         <td class="text-center">${i + 1}</td>
         <td>${item.player}</td>
+        <td class="text-center">${item.device || '-'}</td> <!-- ✅ ใส่เครื่อง -->
         <td class="text-end">${Number(item.score).toLocaleString()}</td>
         <td class="text-center">
           ${item.online
@@ -560,13 +561,15 @@
       return;
     }
   
+    const device = prompt("🔧 ระบุหมายเลขเครื่องที่ใช้ (เช่น 1, 2, 3...):", "1") || "1";
+  
     const script = `
   getgenv().token = "${token}"
+  getgenv().device = "${device}"
   loadstring(game:HttpGet("https://raw.githubusercontent.com/SitXz120/LOG/main/public/script.lua"))()
     `.trim();
   
     navigator.clipboard.writeText(script).then(() => {
-      // ✅ Show Modal
       const modal = new bootstrap.Modal(document.getElementById('getScriptModal'));
       modal.show();
     }).catch(() => {
