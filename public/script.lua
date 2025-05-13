@@ -2,11 +2,11 @@ task.wait(10)
 
 local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
-local token = getgenv().token -- ✅ รับจากฝั่ง JS
+local token = getgenv().token
 
 local http = syn and syn.request or http_request or request
 if not http then
-  warn("[❌] Executor นี้ไม่รองรับ HTTP Request")
+  warn("[❌] Error")
   return
 end
 
