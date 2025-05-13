@@ -94,6 +94,7 @@ app.post('/data', (req, res) => {
     .map(entry => ({
       player: entry.player,
       score: entry.score,
+      device: entry.device || "-", // ✅ เพิ่ม device ตรงนี้
       online: now - entry.lastSeen <= TIMEOUT
     }));
 
