@@ -96,10 +96,29 @@
         backdrop-filter: blur(3px);
         border-radius: 12px;
       }
-
+      #bgVideo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        z-index: -10;
+        opacity: 0.15; /* ปรับความโปร่งใส */
+        pointer-events: none; /* ป้องกันไม่ให้บัง UI */
+        filter: blur(1px); /* เพิ่มความละมุน */
+      }
+    
   </style>
 </head>
 <body>
+  
+<!-- 🎬 Video Background -->
+<video autoplay muted loop playsinline id="bgVideo">
+  <source src="videos/moji-bg.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
 
 <!-- ✅ Navbar -->
 
