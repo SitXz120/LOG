@@ -242,10 +242,19 @@
 
   <div class="row text-center mb-4">
     <div class="col">
-      <div class="alert alert-soft fw-bold fs-5 shadow">🟢 ออนไลน์: <span id="online-count">0</span> คน</div>
+      <div class="alert alert-soft fw-bold fs-5 shadow">
+        🟢 ออนไลน์: <span id="online-count">0</span> คน
+      </div>
     </div>
     <div class="col">
-      <div class="alert alert-soft fw-bold fs-5 shadow">🔴 ออฟไลน์: <span id="offline-count">0</span> คน</div>
+      <div class="alert alert-soft fw-bold fs-5 shadow">
+        🔴 ออฟไลน์: <span id="offline-count">0</span> คน
+      </div>
+    </div>
+    <div class="col">
+      <div class="alert alert-soft fw-bold fs-5 shadow">
+        👥 ไอดีทั้งหมด: <span id="total-players">0</span> ไอดี
+      </div>
     </div>
   </div>
 
@@ -333,6 +342,7 @@
     total.innerText = `💰 รวมทั้งหมด: ${totalScore.toLocaleString()} Shooms`;
     onlineCount.innerText = online;
     offlineCount.innerText = offline;
+    document.getElementById('total-players').innerText = scores.length;
     }
 
   function openAuthModal() {
