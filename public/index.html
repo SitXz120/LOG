@@ -271,6 +271,25 @@
     <h1 class="display-5 fw-bold text-info shadow">📊 Moji Manager Tools</h1>
   </div>
 
+<!-- ✅ Modal เลือกเครื่อง -->
+<div class="modal fade" id="deviceModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">🔧 เลือกหมายเลขเครื่อง</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="number" id="deviceNumber" class="form-control" placeholder="เช่น 1, 2, 3..." min="1">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">❌ ยกเลิก</button>
+        <button class="btn btn-primary" onclick="generateScript()">✅ สร้าง Script</button>
+      </div>
+    </div>
+  </div>
+</div>
+
   <!-- ✅ Online/Offline Summary -->
 
   <div class="row text-center mb-4">
@@ -562,7 +581,19 @@
       return;
     }
   
-    const device = prompt("🔧 ระบุหมายเลขเครื่องที่ใช้ (เช่น 1, 2, 3...):", "1") || "1";
+    // เปิด modal ให้กรอกเลขเครื่อง
+    const modal = new bootstrap.Modal(document.getElementById('deviceModal'));
+    modal.show();
+  }
+
+  function generateScript() {
+    const token = localStorage.getItem("userToken");
+    const device = document.getElementById("deviceNumber").value.trim();
+  
+    if (!device || isNaN(device)) {
+      alert("กรุณากรอกหมายเลขเครื่องที่ถูกต้อง");
+      return;
+    }
   
     const script = `
   getgenv().token = "${token}"
@@ -571,13 +602,14 @@
     `.trim();
   
     navigator.clipboard.writeText(script).then(() => {
+      bootstrap.Modal.getInstance(document.getElementById("deviceModal")).hide();
       const modal = new bootstrap.Modal(document.getElementById('getScriptModal'));
       modal.show();
     }).catch(() => {
       document.getElementById("copyStatus").innerText = "❌ ไม่สามารถคัดลอกได้";
     });
   }
-
+  
   const audio = document.getElementById('bgMusic');
   const volumeSlider = document.getElementById('musicVolume');
   
