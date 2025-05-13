@@ -87,7 +87,6 @@ app.post('/data', (req, res) => {
   if (!user) return res.status(401).send("Invalid token");
 
   const now = Date.now();
-  const TIMEOUT = 30000;
 
   const entries = scores
     .filter(s => s.username === user.username)
@@ -97,7 +96,7 @@ app.post('/data', (req, res) => {
       online: now - entry.lastSeen <= TIMEOUT
     }));
 
-  res.json(entries); // ✅ <-- สำคัญที่สุด!
+  res.json(entries);
 });
 
 // ✅ ดึงชื่อจาก token
