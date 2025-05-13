@@ -45,6 +45,23 @@
           transform: translateY(0);
         }
       }
+      @keyframes pulseGreen {
+        0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 100, 0.5); }
+        50% { box-shadow: 0 0 15px rgba(0, 255, 100, 1); }
+      }
+      
+      @keyframes pulseGray {
+        0%, 100% { box-shadow: 0 0 5px rgba(150, 150, 150, 0.2); }
+        50% { box-shadow: 0 0 10px rgba(150, 150, 150, 0.4); }
+      }
+      
+      .pulse-online {
+        animation: pulseGreen 1.5s infinite;
+      }
+      
+      .pulse-offline {
+        animation: pulseGray 1.5s infinite;
+      }
 
   </style>
 </head>
@@ -197,9 +214,9 @@
         <td>${item.player}</td>
         <td class="text-end">${Number(item.score).toLocaleString()}</td>
         <td class="text-center">
-            ${item.online
-            ? '<span class="badge bg-success">ออนไลน์</span>'
-            : '<span class="badge bg-secondary">ออฟไลน์</span>'}
+          ${item.online
+            ? '<span class="badge bg-success pulse-online">ออนไลน์</span>'
+            : '<span class="badge bg-secondary pulse-offline">ออฟไลน์</span>'}
         </td>
         `;
         table.appendChild(tr);
