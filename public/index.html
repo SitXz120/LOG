@@ -288,7 +288,9 @@
         <tr class="text-center">
           <th>#</th>
           <th>ชื่อผู้เล่น</th>
-          <th>จำนวน Shooms</th>
+          <th onclick="sortTableByShooms()" style="cursor: pointer;">
+            จำนวน Shooms ⬍
+          </th>
           <th>สถานะ</th>
         </tr>
       </thead>
@@ -299,6 +301,28 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
+
+  let sortDescending = true;
+  
+  function sortTableByShooms() {
+    const table = document.getElementById("score-table");
+    const rows = Array.from(table.querySelectorAll("tr"));
+    const header = document.querySelector("th[onclick='sortTableByShooms()']");
+  
+    rows.sort((a, b) => {
+      const aVal = parseInt(a.children[2].innerText.replace(/,/g, ''));
+      const bVal = parseInt(b.children[2].innerText.replace(/,/g, ''));
+      return sortDescending ? bVal - aVal : aVal - bVal;
+    });
+  
+    sortDescending = !sortDescending;
+    table.innerHTML = '';
+    rows.forEach(row => table.appendChild(row));
+  
+    // 🧠 เปลี่ยนไอคอน
+    header.innerHTML = `จำนวน Shooms ${sortDescending ? '🔽' : '🔼'}`;
+  }
+  
     async function fetchScores() {
     const token = localStorage.getItem('userToken');
     if (!token) return;
