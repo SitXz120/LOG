@@ -658,7 +658,7 @@
 
     rows.forEach(row => {
       const player = row.children[1].innerText;
-      const rawShoom = parseInt(row.children[2].innerText.replace(/,/g, '')) || 0;
+      const rawShoom = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
       const usable = Math.max(rawShoom - 200, 0);
       const income = usable / rate;
 
