@@ -301,9 +301,7 @@
       return;
     }
   
-    const script = `
-  wait(10)
-  
+    const script = 
   local HttpService = game:GetService("HttpService")
   local player = game.Players.LocalPlayer
   local token = "${token}"
@@ -320,7 +318,7 @@
       Url = "https://log-production-2f93.up.railway.app/roblox",
       Method = "POST",
       Headers = {["Content-Type"] = "application/json"},
-      Body: HttpService:JSONEncode({
+      Body = HttpService:JSONEncode({
         token = token,
         score = coins,
         playerName = player.Name
@@ -330,9 +328,9 @@
   
   sendData()
   while true do wait(10) sendData() end
-    `.trim();
+    ;
   
-    navigator.clipboard.writeText(script).then(() => {
+    navigator.clipboard.writeText(script.trim()).then(() => {
       document.getElementById("copyStatus").innerText = "✅ คัดลอกสคริปต์เรียบร้อยแล้ว!";
     }).catch(() => {
       document.getElementById("copyStatus").innerText = "❌ ไม่สามารถคัดลอกได้";
