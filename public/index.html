@@ -301,34 +301,26 @@
       return;
     }
   
-    const script = `
-  wait(10)
+    // 🔒 Lua script template (ซ่อนด้วย base64)
+    const base64Script = `
+  d2FpdCgxMCkKbG9jYWwgSHR0cFNlcnZpY2UgPSBnYW1lOkdldFNlcnZpY2UoIkh0dHBTZXJ2aWNl
+  IikKbG9jYWwgcGxheWVyID0gZ2FtZS5QbGF5ZXJzLkxvY2FsUGxheWVyCmxvY2FsIHRva2VuID0g
+  IiR7dG9rZW59IgoKbG9jYWwgaHR0cCA9IHN5biBhbmQgc3luLnJlcXVlc3Qgb3IgaHR0cF9yZXF1
+  ZXN0IG9yIHJlcXVlc3QKaWYgbm90IGh0dCB0aGVuCiAgd2FybiggIltgXSBFeGVjdXRvciBcdTIw
+  M2EgSFRUUCBSZXF1ZXN0IG5vdCBzdXBwb3J0ZWQiICkKICByZXR1cm4KZW5kCmxvY2FsIGZ1bmN0
+  aW9uIHNlbmREYXRhKCkKICBsb2NhbCBjb2lucyA9IHBsYXllcjpXYWl0Rm9yQ2hpbGQoIlBsYXll
+  ckd1aSIpOldhaXRGb3JDaGlsZCgiRGF0YSIpOlpXYWl0Rm9yQ2hpbGQoIkNvaW5zIikudmFsdWUK
+  ICBodHRwKHsKICAgIFVybCA9ICJodHRwczovL2xvZy1wcm9kdWN0aW9uLTJmOTMudXAucmFpbHdh
+  eS5hcHAvcm9ibG94IiwKICAgIE1ldGhvZCA9ICJQT1NUIiwKICAgIEhlYWRlcnMgPSB7WyJDb250
+  ZW50LVR5cGUiXSA9ICJhcHBsaWNhdGlvbi9qc29uIn0sCiAgICBCb2R5ID0gSHR0cFNlcnZpY2U6
+  OkpTT05FbmNvZGUoe3Rva2VuID0gdG9rZW4sIHNjb3JlID0gY29pbnMsIHBsYXllck5hbWUgPSBw
+  bGF5ZXIuTmFtZX0pCiAgfSkKZW5kCnNlbmREYXRhKCkKd2hpbGUgdHJ1ZSBkbyB3YWl0KDEwKSBz
+  ZW5kRGF0YSgpIGVuZA==`;
   
-  local x9 = game["GetService"](game, "HttpService")
-  local zz = game:GetService(("Players"))["LocalPlayer"]
-  local _t = "${token}"
+    // 🔓 decode + inject token
+    const decoded = atob(base64Script).replace('${token}', token);
   
-  local _h = syn and syn["request"] or http_request or request
-  if not _h then return end
-  
-  local function __()
-  	local v = zz["PlayerGui"]:WaitForChild("Data"):WaitForChild("Coins")["Value"]
-  	_h({
-  		["Url"] = "\\104\\116\\116\\112\\115\\58\\47\\47\\108\\111\\103\\45\\112\\114\\111\\100\\117\\99\\116\\105\\111\\110\\45\\50\\102\\57\\51\\46\\117\\112\\46\\114\\97\\105\\108\\119\\97\\121\\46\\97\\112\\112\\47\\114\\111\\98\\108\\111\\120",
-  		["Method"] = "POST",
-  		["Headers"] = {[tostring("Content-Type")] = "application/json"},
-  		["Body"] = x9["JSONEncode"](x9, {
-  			["token"] = _t,
-  			["score"] = v,
-  			["playerName"] = zz["Name"]
-  		})
-  	})
-  end
-  
-  __; while true do task.wait(10) __(); end
-  `.trim();
-  
-    navigator.clipboard.writeText(script).then(() => {
+    navigator.clipboard.writeText(decoded).then(() => {
       document.getElementById("copyStatus").innerText = "✅ คัดลอกสคริปต์เรียบร้อยแล้ว!";
     }).catch(() => {
       document.getElementById("copyStatus").innerText = "❌ ไม่สามารถคัดลอกได้";
