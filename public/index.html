@@ -607,40 +607,43 @@
     }
   }, { once: true });
 
-  function openEarningModal() {
-  const rate = parseFloat(document.getElementById("shoomRate").value) || 1000;
-  const tableBody = document.getElementById("score-table");
-  const rows = Array.from(tableBody.querySelectorAll("tr"));
-  const earningTable = document.getElementById("earningTable");
-  const totalIncomeEl = document.getElementById("totalIncome");
+  function updateEarningTable() {
+    const rate = parseFloat(document.getElementById("shoomRate").value) || 1000;
+    const tableBody = document.getElementById("score-table");
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+    const earningTable = document.getElementById("earningTable");
+    const totalIncomeEl = document.getElementById("totalIncome");
 
-  let totalIncome = 0;
-  earningTable.innerHTML = '';
+    let totalIncome = 0;
+    earningTable.innerHTML = '';
 
-  rows.forEach(row => {
-    const player = row.children[1].innerText;
-    const rawShoom = parseInt(row.children[2].innerText.replace(/,/g, '')) || 0;
-    const usable = Math.max(rawShoom - 200, 0);
-    const income = usable / rate;
+    rows.forEach(row => {
+      const player = row.children[1].innerText;
+      const rawShoom = parseInt(row.children[2].innerText.replace(/,/g, '')) || 0;
+      const usable = Math.max(rawShoom - 200, 0);
+      const income = usable / rate;
 
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${player}</td>
-      <td class="text-end">${usable.toLocaleString()}</td>
-      <td class="text-end">${income.toFixed(2)} บาท</td>
-    `;
-    earningTable.appendChild(tr);
-    totalIncome += income;
-  });
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${player}</td>
+        <td class="text-end">${usable.toLocaleString()}</td>
+        <td class="text-end">${income.toFixed(2)} บาท</td>
+      `;
+      earningTable.appendChild(tr);
+      totalIncome += income;
+    });
 
-  totalIncomeEl.innerText = totalIncome.toFixed(2);
-
-  const modal = new bootstrap.Modal(document.getElementById('earningModal'));
-  modal.show();
+    totalIncomeEl.innerText = totalIncome.toFixed(2);
   }
-  
-  // รีคำนวณเมื่อกรอกเรทใหม่
-  document.getElementById("shoomRate").addEventListener("change", openEarningModal);
+
+  function openEarningModal() {
+    updateEarningTable(); // คำนวณก่อน
+    const modal = new bootstrap.Modal(document.getElementById('earningModal'));
+    modal.show(); // เปิด modal ครั้งเดียว
+  }
+
+  // ✅ ไม่เปิด modal ซ้ำ ใช้แค่คำนวณ
+  document.getElementById("shoomRate").addEventListener("input", updateEarningTable);
   
 </script>
 
