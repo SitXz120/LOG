@@ -91,6 +91,13 @@
         background: rgba(150, 150, 150, 0.3);
         animation: pulseGray 1.5s infinite;
       }
+      .alert-soft {
+        background-color: rgba(255, 255, 255, 0.05); /* ทึบลง */
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(3px);
+        border-radius: 12px;
+      }
 
   </style>
 </head>
@@ -168,10 +175,10 @@
 
   <div class="row text-center mb-4">
     <div class="col">
-      <div class="alert alert-info fw-bold fs-5 shadow">🟢 ออนไลน์: <span id="online-count">0</span> คน</div>
+      <div class="alert alert-soft fw-bold fs-5 shadow">🟢 ออนไลน์: <span id="online-count">0</span> คน</div>
     </div>
     <div class="col">
-      <div class="alert alert-secondary fw-bold fs-5 shadow">🔴 ออฟไลน์: <span id="offline-count">0</span> คน</div>
+      <div class="alert alert-soft fw-bold fs-5 shadow">🔴 ออฟไลน์: <span id="offline-count">0</span> คน</div>
     </div>
   </div>
 
