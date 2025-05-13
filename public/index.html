@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,24 +13,28 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
-    .card-glow {
-      box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
-      border-radius: 1rem;
-      border: none;
-    }
+```
+.card-glow {
+  box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
+  border-radius: 1rem;
+  border: none;
+}
 
-    .table th, .table td {
-      vertical-align: middle;
-    }
+.table th, .table td {
+  vertical-align: middle;
+}
 
-    .btn-glow {
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    }
+.btn-glow {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+```
+
   </style>
 </head>
 <body>
 
 <!-- ✅ Navbar -->
+
 <nav class="navbar navbar-dark bg-dark shadow px-3 justify-content-between">
   <a href="/" class="navbar-brand fw-bold">🌐 Moji Leaderboard</a>
   <div id="user-nav">
@@ -38,6 +43,7 @@
 </nav>
 
 <!-- ✅ Modal -->
+
 <div class="modal fade" id="tokenModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-dark">
@@ -53,6 +59,7 @@
 </div>
 
 <!-- ✅ Modal Register/Login -->
+
 <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-dark">
@@ -71,12 +78,14 @@
 </div>
 
 <!-- ✅ Main Container -->
+
 <div class="container py-5">
   <div class="text-center mb-5">
     <h1 class="display-5 fw-bold text-info shadow">📊 Leaderboard</h1>
   </div>
 
   <!-- ✅ Online/Offline Summary -->
+
   <div class="row text-center mb-4">
     <div class="col">
       <div class="alert alert-info fw-bold fs-5 shadow">🟢 ออนไลน์: <span id="online-count">0</span> คน</div>
@@ -87,6 +96,7 @@
   </div>
 
   <!-- ✅ Summary Row -->
+
   <div class="row mb-4">
     <div class="col-md-4 text-start">
       <button class="btn btn-danger btn-glow fw-bold w-100" onclick="resetScores()">🗑️ รีเซ็ต Shooms ทั้งหมด</button>
@@ -103,6 +113,7 @@
   </div>
 
   <!-- ✅ Table -->
+
   <div class="table-responsive card-glow">
     <table class="table table-dark table-hover table-bordered mb-0 rounded">
       <thead>
@@ -118,6 +129,7 @@
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
     async function fetchScores() {
     const token = localStorage.getItem('userToken');
@@ -301,7 +313,7 @@
       return;
     }
   
-    const script = 
+    const script = `
   local HttpService = game:GetService("HttpService")
   local player = game.Players.LocalPlayer
   local token = "${token}"
@@ -328,7 +340,7 @@
   
   sendData()
   while true do wait(10) sendData() end
-    ;
+    `;
   
     navigator.clipboard.writeText(script.trim()).then(() => {
       document.getElementById("copyStatus").innerText = "✅ คัดลอกสคริปต์เรียบร้อยแล้ว!";
