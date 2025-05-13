@@ -301,10 +301,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-
+  
+  let lastSortedByShooms = false;
   let sortDescending = true;
   
-  function sortTableByShooms() {
+  function sortTableByShooms(triggerToggle = true) {
     const table = document.getElementById("score-table");
     const rows = Array.from(table.querySelectorAll("tr"));
     const header = document.querySelector("th[onclick='sortTableByShooms()']");
@@ -315,40 +316,43 @@
       return sortDescending ? bVal - aVal : aVal - bVal;
     });
   
-    sortDescending = !sortDescending;
+    if (triggerToggle) {
+      sortDescending = !sortDescending;
+    }
+  
     table.innerHTML = '';
     rows.forEach(row => table.appendChild(row));
   
-    // 🧠 เปลี่ยนไอคอน
     header.innerHTML = `จำนวน Shooms ${sortDescending ? '🔽' : '🔼'}`;
+    lastSortedByShooms = true;
   }
   
-    async function fetchScores() {
+  async function fetchScores() {
     const token = localStorage.getItem('userToken');
     if (!token) return;
-
+  
     const res = await fetch('/data', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token })
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
     });
-
+  
     const scores = await res.json();
     if (!scores || scores.length === 0) return;
-
+  
     const table = document.getElementById('score-table');
     const total = document.getElementById('total');
     const onlineCount = document.getElementById('online-count');
     const offlineCount = document.getElementById('offline-count');
-
+  
     table.innerHTML = '';
     let totalScore = 0;
     let online = 0;
     let offline = 0;
-
+  
     scores.forEach((item, i) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
         <td class="text-center">${i + 1}</td>
         <td>${item.player}</td>
         <td class="text-end">${Number(item.score).toLocaleString()}</td>
@@ -357,17 +361,21 @@
             ? '<span class="badge bg-success pulse-online">ออนไลน์</span>'
             : '<span class="badge bg-secondary pulse-offline">ออฟไลน์</span>'}
         </td>
-        `;
-        table.appendChild(tr);
-        totalScore += Number(item.score);
-        item.online ? online++ : offline++;
+      `;
+      table.appendChild(tr);
+      totalScore += Number(item.score);
+      item.online ? online++ : offline++;
     });
-
+  
     total.innerText = `💰 รวมทั้งหมด: ${totalScore.toLocaleString()} Shooms`;
     onlineCount.innerText = online;
     offlineCount.innerText = offline;
     document.getElementById('total-players').innerText = scores.length;
+  
+    if (lastSortedByShooms) {
+      sortTableByShooms(false);
     }
+  }
 
   function openAuthModal() {
     document.getElementById('authUsername').value = '';
