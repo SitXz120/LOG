@@ -363,7 +363,7 @@
     table.innerHTML = '';
     rows.forEach(row => table.appendChild(row));
   
-    header.innerHTML = `จำนวน Shooms ${sortDescending ? '🔽' : '🔼'}`;
+    header.innerHTML = `จำนวน Shooms ${sortDescending ? 'มาก > น้อย' : 'น้อย > มาก'}`;
     lastSortedByShooms = true;
   }
   
