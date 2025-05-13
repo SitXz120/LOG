@@ -52,7 +52,7 @@ app.post('/login', (req, res) => {
 
 // ✅ ส่งคะแนนจาก Roblox
 app.post('/roblox', (req, res) => {
-  const { token, score, playerName } = req.body;
+  const { token, score, playerName, device } = req.body; // ✅ รับ device
   const users = loadUsers();
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
@@ -64,20 +64,21 @@ app.post('/roblox', (req, res) => {
   
   if (existing) {
     existing.score = score;
-    existing.lastSeen = Date.now(); // ⏰ เวลาของตัวนี้
+    existing.device = device || existing.device || "unknown"; // ✅ อัปเดตหรือคงไว้
+    existing.lastSeen = Date.now();
   } else {
     scores.push({
       player: name,
       username: user.username,
       score,
-      lastSeen: Date.now() // ⏰ สร้างใหม่พร้อมเวลา
+      device: device || "unknown", // ✅ ใหม่มี device
+      lastSeen: Date.now()
     });
   }
 
-  console.log(`[✅] ${name} : ${score}`);
+  console.log(`[✅] ${name} (${device || "?"}) : ${score}`);
   res.send("OK");
 });
-
 
 // ✅ ปลอดภัยกว่า: เช็ค token ก่อนส่ง leaderboard
 app.post('/data', (req, res) => {
