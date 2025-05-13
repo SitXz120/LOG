@@ -231,6 +231,38 @@
   </div>
 </div>
 
+<!-- 💸 Modal คำนวณรายได้ -->
+<div class="modal fade" id="earningModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">💰 คำนวณรายได้จาก Shoom</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">📉 เรท Shoom ต่อ 1 บาท:</label>
+          <input type="number" class="form-control" id="shoomRate" value="1000">
+        </div>
+        <div id="earningResults" class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light text-center">
+              <tr>
+                <th>ชื่อผู้เล่น</th>
+                <th>ใช้ได้ (Shoom - 200)</th>
+                <th>รายได้ (บาท)</th>
+              </tr>
+            </thead>
+            <tbody id="earningTable"></tbody>
+          </table>
+          <div class="text-end fw-bold fs-5">รวมรายได้ทั้งหมด: <span id="totalIncome">0</span> บาท</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ✅ Main Container -->
 
 <div class="container py-5">
@@ -279,6 +311,11 @@
       <p class="text-info mt-2 mb-0" id="copyStatus"></p>
     </div>
   </div>
+    <div class="col-md-4 text-center mt-2">
+      <button class="btn btn-info btn-glow fw-bold w-100" onclick="openEarningModal()">
+        💰 คำนวณรายได้
+      </button>
+    </div>
 
   <!-- ✅ Table -->
 
@@ -570,6 +607,40 @@
     }
   }, { once: true });
 
+  function openEarningModal() {
+  const rate = parseFloat(document.getElementById("shoomRate").value) || 1000;
+  const tableBody = document.getElementById("score-table");
+  const rows = Array.from(tableBody.querySelectorAll("tr"));
+  const earningTable = document.getElementById("earningTable");
+  const totalIncomeEl = document.getElementById("totalIncome");
+
+  let totalIncome = 0;
+  earningTable.innerHTML = '';
+
+  rows.forEach(row => {
+    const player = row.children[1].innerText;
+    const rawShoom = parseInt(row.children[2].innerText.replace(/,/g, '')) || 0;
+    const usable = Math.max(rawShoom - 200, 0);
+    const income = usable / rate;
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${player}</td>
+      <td class="text-end">${usable.toLocaleString()}</td>
+      <td class="text-end">${income.toFixed(2)} บาท</td>
+    `;
+    earningTable.appendChild(tr);
+    totalIncome += income;
+  });
+
+  totalIncomeEl.innerText = totalIncome.toFixed(2);
+
+  const modal = new bootstrap.Modal(document.getElementById('earningModal'));
+  modal.show();
+  }
+  
+  // รีคำนวณเมื่อกรอกเรทใหม่
+  document.getElementById("shoomRate").addEventListener("input", openEarningModal);
   
 </script>
 
