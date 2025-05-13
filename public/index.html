@@ -433,7 +433,11 @@
     });
 
     if (res.ok) {
-        fetchScores(); // รีโหลดใหม่
+        // ✅ เคลียร์ UI แบบทันที
+        document.getElementById("score-table").innerHTML = '';
+        document.getElementById("total").innerText = '💰 รวมทั้งหมด: 0 Shooms';
+        document.getElementById("online-count").innerText = '0';
+        document.getElementById("offline-count").innerText = '0';
     } else {
         alert("เกิดข้อผิดพลาดในการรีเซ็ต Shooms");
     }
