@@ -3,136 +3,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Moji Leaderboard</title>
+  <title>Moji</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
       body {
-        background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
-        color: white;
-        font-family: 'Segoe UI', sans-serif;
-      }
-      
-      .card-glow {
-        box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
-        border-radius: 1rem;
-        border: none;
-      }
-      
-      .table th, .table td {
-        vertical-align: middle;
-      }
-      
-      .btn-glow {
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        transition: transform 0.2s ease, box-shadow 0.3s ease;
-      }
-      .btn-glow:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0 18px rgba(0, 255, 204, 0.5);
-      }
-      
-      .display-5 {
-        animation: fadeInDown 1s ease-out;
-      }
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      @keyframes pulseGreen {
-        0%, 100% { box-shadow: 0 0 4px rgba(0, 255, 100, 0.3); }
-        50% { box-shadow: 0 0 8px rgba(0, 255, 100, 0.5); }
-      }
-      
-      @keyframes pulseGray {
-        0%, 100% { box-shadow: 0 0 3px rgba(150, 150, 150, 0.15); }
-        50% { box-shadow: 0 0 6px rgba(150, 150, 150, 0.3); }
-      }
-      .pulse-online {
-        animation: pulseGreen 1.5s infinite;
-      }
-      
-      .pulse-offline {
-        animation: pulseGray 1.5s infinite;
-      }
-      .badge.pulse-online, .badge.pulse-offline {
-        border-radius: 30px;
-        padding: 0.5em 1em;
-        font-weight: bold;
-        color: #fff;
-        background-color: transparent;
-        position: relative;
-        z-index: 1;
-      }
-      
-      .badge.pulse-online::before,
-      .badge.pulse-offline::before {
-        content: "";
-        position: absolute;
-        top: -4px; left: -10px; right: -10px; bottom: -4px;
-        border-radius: 40px;
-        z-index: -1;
-        filter: blur(6px);
-      }      
-      .badge.pulse-online::before {
-        background: rgba(0, 255, 100, 0.25);
-        animation: pulseGreen 1.5s infinite;
-      }
-      
-      .badge.pulse-offline::before {
-        background: rgba(150, 150, 150, 0.15);
-        animation: pulseGray 1.5s infinite;
-      }
-      .alert-soft {
-        background-color: rgba(255, 255, 255, 0.05); /* ทึบลง */
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(3px);
-        border-radius: 12px;
-      }
-      #bgVideo {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        z-index: -10;
-        opacity: 0.15; /* ปรับความโปร่งใส */
-        pointer-events: none; /* ป้องกันไม่ให้บัง UI */
-        filter: blur(1px); /* เพิ่มความละมุน */
-      }
-      .music-popup {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        background: rgba(0, 0, 0, 0.5);
-        padding: 10px 12px;
-        border-radius: 10px;
-        z-index: 99;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        backdrop-filter: blur(4px);
-        box-shadow: 0 0 10px rgba(0,255,204,0.2);
-      }
-      .music-popup button {
-        background: none;
-        border: none;
-        color: #fff;
-        font-size: 20px;
-        cursor: pointer;
-      }
-      .music-popup input[type="range"] {
-        width: 100px;
-      }
-    
+    background: linear-gradient(to bottom, #0f0f0f, #1a1a1a);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .card-glow {
+    box-shadow: 0 4px 20px rgba(0, 255, 204, 0.1);
+    border-radius: 1rem;
+    border: none;
+  }
+  
+  .table th, .table td {
+    vertical-align: middle;
+  }
+  
+  .btn-glow {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(0, 255, 204, 0.5);
+  }
+  
+  .display-5 {
+    animation: fadeInDown 1s ease-out;
+  }
+  
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes pulseGreen {
+    0%, 100% { box-shadow: 0 0 4px rgba(0, 255, 100, 0.3); }
+    50% { box-shadow: 0 0 8px rgba(0, 255, 100, 0.5); }
+  }
+  
+  @keyframes pulseGray {
+    0%, 100% { box-shadow: 0 0 3px rgba(150, 150, 150, 0.15); }
+    50% { box-shadow: 0 0 6px rgba(150, 150, 150, 0.3); }
+  }
+  
+  .pulse-online {
+    animation: pulseGreen 1.5s infinite;
+  }
+  
+  .pulse-offline {
+    animation: pulseGray 1.5s infinite;
+  }
+  
+  .badge.pulse-online, .badge.pulse-offline {
+    border-radius: 30px;
+    padding: 0.5em 1em;
+    font-weight: bold;
+    color: #fff;
+    background-color: transparent;
+    position: relative;
+    z-index: 1;
+  }
+  .badge.pulse-online::before, .badge.pulse-offline::before {
+    content: "";
+    position: absolute;
+    top: -4px; left: -10px; right: -10px; bottom: -4px;
+    border-radius: 40px;
+    z-index: -1;
+    filter: blur(6px);
+  }
+  .badge.pulse-online::before {
+    background: rgba(0, 255, 100, 0.25);
+    animation: pulseGreen 1.5s infinite;
+  }
+  .badge.pulse-offline::before {
+    background: rgba(150, 150, 150, 0.15);
+    animation: pulseGray 1.5s infinite;
+  }
+  
+  .alert-soft {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(3px);
+    border-radius: 12px;
+  }
+  
+  /* ✅ วิดีโอพื้นหลัง */
+  #bgVideo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -10;
+    opacity: 0.15;
+    pointer-events: none;
+    filter: blur(1px);
+  }
+  
+  /* ✅ ป๊อปอัพเพลง */
+  .music-popup {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 12px;
+    border-radius: 10px;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 0 10px rgba(0,255,204,0.2);
+  }
+  .music-popup button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .music-popup input[type="range"] {
+    width: 100px;
+  }
+  
+  /* ✅ กล่อง Summary ใหม่ */
+  .summary-card {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(4px);
+    text-align: center;
+    box-shadow: 0 0 8px rgba(0, 255, 204, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+  .summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px rgba(0, 255, 204, 0.2);
+  }
+  .summary-card h5 {
+    margin-bottom: 0.25rem;
+    font-size: 1.25rem;
+  }
+  .summary-card span {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .highlight-account {
+    color: #00ffc8;
+  }
+
   </style>
 </head>
 <body>
@@ -293,19 +320,22 @@
   <!-- ✅ Online/Offline Summary -->
 
   <div class="row text-center mb-4">
-    <div class="col">
-      <div class="alert alert-soft fw-bold fs-5 shadow">
-        🟢 ออนไลน์: <span id="online-count">0</span> คน
+    <div class="col-md-4">
+      <div class="summary-card">
+        <h5><span class="highlight-account">Account</span> Online 🟢</h5>
+        <span id="online-count">0</span>
       </div>
     </div>
-    <div class="col">
-      <div class="alert alert-soft fw-bold fs-5 shadow">
-        🔴 ออฟไลน์: <span id="offline-count">0</span> คน
+    <div class="col-md-4">
+      <div class="summary-card">
+        <h5><span class="highlight-account">Account</span> Offline 🔴</h5>
+        <span id="offline-count">0</span>
       </div>
     </div>
-    <div class="col">
-      <div class="alert alert-soft fw-bold fs-5 shadow">
-        👥 ไอดีทั้งหมด: <span id="total-players">0</span> ไอดี
+    <div class="col-md-4">
+      <div class="summary-card">
+        <h5><span class="highlight-account">Total</span> Accounts 👥</h5>
+        <span id="total-players">0</span>
       </div>
     </div>
   </div>
