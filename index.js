@@ -50,29 +50,36 @@ app.post('/login', (req, res) => {
   res.json({ token: user.token });
 });
 
-// ✅ ส่งคะแนนจาก Roblox
+// ✅ ส่งคะแนนจาก Roblox พร้อม token เพิ่มเติม
 app.post('/roblox', (req, res) => {
-  const { token, score, playerName, device } = req.body; // ✅ รับ device
+  const { token, score, playerName, device, revive, fullgrow, colorchange, partial } = req.body;
   const users = loadUsers();
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
 
   const name = playerName || user.username;
 
-  // ✅ ตรงนี้แยก lastSeen ตาม player
   const existing = scores.find(s => s.player === name);
-  
+
   if (existing) {
     existing.score = score;
-    existing.device = device || existing.device || "unknown"; // ✅ อัปเดตหรือคงไว้
+    existing.device = device || existing.device || "unknown";
     existing.lastSeen = Date.now();
+    existing.revive = revive || 0;
+    existing.fullgrow = fullgrow || 0;
+    existing.colorchange = colorchange || 0;
+    existing.partial = partial || 0;
   } else {
     scores.push({
       player: name,
       username: user.username,
       score,
-      device: device || "unknown", // ✅ ใหม่มี device
-      lastSeen: Date.now()
+      device: device || "unknown",
+      lastSeen: Date.now(),
+      revive: revive || 0,
+      fullgrow: fullgrow || 0,
+      colorchange: colorchange || 0,
+      partial: partial || 0
     });
   }
 
