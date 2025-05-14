@@ -370,35 +370,23 @@
   </div>
 
   <!-- ✅ Summary Row -->
+<div class="d-flex flex-wrap gap-3 mb-4 justify-content-between">
+  <button class="btn btn-danger btn-glow fw-bold"
+          data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
+    🗑️ รีเซ็ต Shooms ทั้งหมด
+  </button>
+  
+  <button class="btn btn-success btn-glow fw-bold"
+          onclick="copyScript()">
+    📋 Get Script
+  </button>
 
-  <div class="row mb-4">
-    <div class="col-md-4 text-start">
-      <button class="btn btn-danger btn-glow fw-bold w-100"
-              data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
-        🗑️ รีเซ็ต Shooms ทั้งหมด
-      </button>
-    </div>
-    <div class="col-md-4 text-center">
-      <div class="summary-card">
-        <h5><span class="highlight-account">Total</span> <span class="text-danger">Shooms</span></h5>
-      <div id="total" class="fs-4 fw-bold d-flex align-items-center justify-content-center gap-2">
-        <span id="shoom-total-value">0</span>
-        <img src="images/shoom.png" alt="Shoom Icon" style="height: 24px;">
-      </div>
-    </div>
-    <div class="col-md-4 text-end">
-      <button class="btn btn-success btn-glow fw-bold w-100 position-relative" onclick="copyScript()">
-        📋 Get Script
-      </button>
-      <p class="text-info mt-2 mb-0" id="copyStatus"></p>
-    </div>
-    <!-- ย้ายปุ่มนี้เข้ามาใน row -->
-    <div class="col-12 mt-3">
-      <button class="btn btn-info btn-glow fw-bold w-100" onclick="openEarningModal()">
-        💰 คำนวณรายได้
-      </button>
-    </div>
-  </div>
+  <button class="btn btn-info btn-glow fw-bold"
+          onclick="openEarningModal()">
+    💰 คำนวณรายได้
+  </button>
+</div>
+<p class="text-info mb-4" id="copyStatus"></p>
 
   <!-- ✅ Table -->
   
