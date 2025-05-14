@@ -159,6 +159,9 @@
   .highlight-account {
     color: #00ffc8;
   }
+  .text-danger {
+    color: #ff5c5c !important;
+  }
 
   </style>
 </head>
@@ -350,8 +353,9 @@
       </button>
     </div>
     <div class="col-md-4 text-center">
-      <div class="alert alert-success fw-bold fs-5 mb-0 shadow" id="total">
-        💰 รวมทั้งหมด: 0 Shooms
+      <div class="summary-card">
+        <h5><span class="highlight-account">Total</span> Shooms</h5>
+        <span id="total" class="text-danger">0</span>
       </div>
     </div>
     <div class="col-md-4 text-end">
