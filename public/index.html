@@ -369,10 +369,12 @@
   </div>
 </div>
 
-<!-- Total Item -->
-<div class="row justify-content-center mb-4">
-  <div class="col-md-4">
-    <div class="summary-card small-card">
+<!-- ✅ Total Items & Tokens -->
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 justify-content-center">
+
+  <!-- Shooms -->
+  <div class="col">
+    <div class="summary-card small-card border border-danger">
       <h5><span class="text-danger">Total Shooms</span></h5>
       <div class="fs-4 fw-bold d-flex align-items-center justify-content-center gap-2">
         <span id="shoom-total-value">0</span>
@@ -380,7 +382,41 @@
       </div>
     </div>
   </div>
+
+  <!-- CreatureRevive Token -->
+  <div class="col">
+    <div class="summary-card small-card border border-success">
+      <h5><span style="color: #7CFC00;">Total CreatureRevive Token</span></h5>
+      <div class="fs-4 fw-bold" id="revive-token">0</div>
+    </div>
+  </div>
+
+  <!-- FullGrow Token -->
+  <div class="col">
+    <div class="summary-card small-card border border-warning">
+      <h5><span style="color: #FFD700;">Total FullGrow Token</span></h5>
+      <div class="fs-4 fw-bold" id="fullgrow-token">0</div>
+    </div>
+  </div>
+
+  <!-- ChangeColors Token -->
+  <div class="col">
+    <div class="summary-card small-card border border-info">
+      <h5><span style="color: #00FFFF;">Total ChangeColors Token</span></h5>
+      <div class="fs-4 fw-bold" id="colorchange-token">0</div>
+    </div>
+  </div>
+
+  <!-- PartialGrow Token -->
+  <div class="col">
+    <div class="summary-card small-card border border-primary">
+      <h5><span style="color: #6495ED;">Total PartialGrow Token</span></h5>
+      <div class="fs-4 fw-bold" id="partialgrow-token">0</div>
+    </div>
+  </div>
+
 </div>
+
 
   <!-- ✅ Summary Row -->
 <div class="row justify-content-center mb-3 g-2">
@@ -466,7 +502,6 @@
     if (!scores || scores.length === 0) return;
   
     const table = document.getElementById('score-table');
-    const total = document.getElementById('total');
     const onlineCount = document.getElementById('online-count');
     const offlineCount = document.getElementById('offline-count');
   
@@ -480,7 +515,7 @@
       tr.innerHTML = `
         <td class="text-center">${i + 1}</td>
         <td>${item.player}</td>
-        <td class="text-center">${item.device || '-'}</td> <!-- ✅ ใส่เครื่อง -->
+        <td class="text-center">${item.device || '-'}</td>
         <td class="text-end">${Number(item.score).toLocaleString()}</td>
         <td class="text-center">
           ${item.online
@@ -493,22 +528,55 @@
       item.online ? online++ : offline++;
     });
   
-    animateNumber(document.getElementById("shoom-total-value"), 
-                  parseInt(document.getElementById("shoom-total-value").innerText.replace(/,/g, '')) || 0, 
-                  totalScore);
-    
-    animateNumber(onlineCount,
-                  parseInt(onlineCount.innerText) || 0,
-                  online);
-    
-    animateNumber(offlineCount,
-                  parseInt(offlineCount.innerText) || 0,
-                  offline);
-    
-    animateNumber(document.getElementById("total-players"),
-                  parseInt(document.getElementById("total-players").innerText) || 0,
-                  scores.length);
-    
+    animateNumber(
+      document.getElementById("shoom-total-value"),
+      safeParseNumber(document.getElementById("shoom-total-value").innerText),
+      totalScore
+    );
+  
+    animateNumber(
+      onlineCount,
+      safeParseNumber(onlineCount.innerText),
+      online
+    );
+  
+    animateNumber(
+      offlineCount,
+      safeParseNumber(offlineCount.innerText),
+      offline
+    );
+  
+    animateNumber(
+      document.getElementById("total-players"),
+      safeParseNumber(document.getElementById("total-players").innerText),
+      scores.length
+    );
+  
+    // ✅ เพิ่ม Token อื่น ๆ
+    animateNumber(
+      document.getElementById("revive-token"),
+      safeParseNumber(document.getElementById("revive-token").innerText),
+      scores.totalRevive || 0
+    );
+  
+    animateNumber(
+      document.getElementById("fullgrow-token"),
+      safeParseNumber(document.getElementById("fullgrow-token").innerText),
+      scores.totalFullGrow || 0
+    );
+  
+    animateNumber(
+      document.getElementById("colorchange-token"),
+      safeParseNumber(document.getElementById("colorchange-token").innerText),
+      scores.totalColorChange || 0
+    );
+  
+    animateNumber(
+      document.getElementById("partialgrow-token"),
+      safeParseNumber(document.getElementById("partialgrow-token").innerText),
+      scores.totalPartialGrow || 0
+    );
+  
     if (lastSortedByShooms) {
       sortTableByShooms(false);
     }
