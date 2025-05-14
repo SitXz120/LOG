@@ -193,6 +193,19 @@
   </style>
 </head>
 <body>
+
+<!-- ✅ Main Container -->
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <!-- 👇 ย้ายกล่อง Total Shooms มาไว้ตรงนี้ -->
+    <div id="total" class="summary-card d-inline-block px-4 py-3">
+      <h5 class="mb-1"><span class="highlight-account">Total</span> <span class="text-danger">Shooms</span></h5>
+      <div class="fs-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+        <span id="shoom-total-value">0</span>
+        <img src="images/shoom.png" alt="Shoom Icon" style="height: 28px;">
+      </div>
+    </div>
+  </div>
   
 <!-- 🎬 Video Background -->
 <video autoplay muted loop playsinline id="bgVideo">
@@ -369,17 +382,6 @@
             data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
       🗑️ รีเซ็ต Shooms ทั้งหมด
     </button>
-  </div>
-
-  <div class="col-md-4">
-    <!-- ✅ กล่อง Total Shooms -->
-    <div id="total" class="summary-card h-100 d-flex flex-column justify-content-center text-center">
-      <h5><span class="highlight-account">Total</span> <span class="text-danger">Shooms</span></h5>
-      <div class="fs-4 fw-bold d-flex align-items-center justify-content-center gap-2">
-        <span id="shoom-total-value">0</span>
-        <img src="images/shoom.png" alt="Shoom Icon" style="height: 24px;">
-      </div>
-    </div>
   </div>
 
   <div class="col-md-4 d-flex flex-column gap-2">
