@@ -514,13 +514,16 @@
     }
   }
 
-  function animateNumber(el, start, end, duration = 800) {
+  function animateNumber(el, start, end, duration = 800, decimals = 0) {
     const startTime = performance.now();
   
     function update(currentTime) {
       const progress = Math.min((currentTime - startTime) / duration, 1);
-      const currentValue = Math.floor(start + (end - start) * progress);
-      el.innerText = currentValue.toLocaleString();
+      const currentValue = start + (end - start) * progress;
+      el.innerText = decimals > 0
+        ? currentValue.toFixed(decimals)
+        : Math.floor(currentValue).toLocaleString();
+  
       if (progress < 1) {
         requestAnimationFrame(update);
       }
