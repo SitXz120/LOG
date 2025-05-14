@@ -50,44 +50,48 @@ app.post('/login', (req, res) => {
   res.json({ token: user.token });
 });
 
-// ✅ ส่งคะแนนจาก Roblox พร้อม token เพิ่มเติม
+// ✅ รับข้อมูลที่ส่งมาจาก Roblox
 app.post('/roblox', (req, res) => {
-  const { token, score, playerName, device, revive, fullgrow, colorchange, partial } = req.body;
+  const {
+    token, score, playerName, device,
+    revive = 0, fullgrow = 0, colorchange = 0, partial = 0
+  } = req.body;
+
   const users = loadUsers();
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
 
   const name = playerName || user.username;
+  const now = Date.now();
 
   const existing = scores.find(s => s.player === name);
-
+  
   if (existing) {
     existing.score = score;
     existing.device = device || existing.device || "unknown";
-    existing.lastSeen = Date.now();
-    existing.revive = revive || 0;
-    existing.fullgrow = fullgrow || 0;
-    existing.colorchange = colorchange || 0;
-    existing.partial = partial || 0;
+    existing.lastSeen = now;
+    existing.revive = revive;
+    existing.fullgrow = fullgrow;
+    existing.colorchange = colorchange;
+    existing.partial = partial;
   } else {
     scores.push({
       player: name,
       username: user.username,
       score,
       device: device || "unknown",
-      lastSeen: Date.now(),
-      revive: revive || 0,
-      fullgrow: fullgrow || 0,
-      colorchange: colorchange || 0,
-      partial: partial || 0
+      lastSeen: now,
+      revive,
+      fullgrow,
+      colorchange,
+      partial
     });
   }
 
-  console.log(`[✅] ${name} (${device || "?"}) : ${score}`);
+  console.log(`[✅] ${name} (${device}) : ${score} | Tokens - R:${revive} F:${fullgrow} C:${colorchange} P:${partial}`);
   res.send("OK");
 });
 
-// ✅ ปลอดภัยกว่า: เช็ค token ก่อนส่ง leaderboard
 // ✅ ปลอดภัยกว่า: เช็ค token ก่อนส่ง leaderboard
 app.post('/data', (req, res) => {
   const { token } = req.body;
@@ -98,31 +102,22 @@ app.post('/data', (req, res) => {
   const now = Date.now();
 
   const entries = scores
-    .filter(s => s.username === user.username)
-    .map(entry => ({
+    .filter(s => s.username === user.username);
+
+  const result = {
+    entries: entries.map(entry => ({
       player: entry.player,
       score: entry.score,
       device: entry.device || "-",
-      online: now - entry.lastSeen <= TIMEOUT,
-      revive: entry.revive || 0,
-      fullgrow: entry.fullgrow || 0,
-      colorchange: entry.colorchange || 0,
-      partial: entry.partial || 0
-    }));
+      online: now - entry.lastSeen <= TIMEOUT
+    })),
+    totalRevive: entries.reduce((sum, e) => sum + (e.revive || 0), 0),
+    totalFullGrow: entries.reduce((sum, e) => sum + (e.fullgrow || 0), 0),
+    totalColorChange: entries.reduce((sum, e) => sum + (e.colorchange || 0), 0),
+    totalPartialGrow: entries.reduce((sum, e) => sum + (e.partial || 0), 0)
+  };
 
-  // ✅ รวม token ทั้งหมดไว้ที่ root ของ response
-  const totalRevive = entries.reduce((sum, e) => sum + (e.revive || 0), 0);
-  const totalFullGrow = entries.reduce((sum, e) => sum + (e.fullgrow || 0), 0);
-  const totalColorChange = entries.reduce((sum, e) => sum + (e.colorchange || 0), 0);
-  const totalPartialGrow = entries.reduce((sum, e) => sum + (e.partial || 0), 0);
-
-  res.json({
-    totalRevive,
-    totalFullGrow,
-    totalColorChange,
-    totalPartialGrow,
-    entries
-  });
+  res.json(result);
 });
 
 // ✅ ดึงชื่อจาก token
