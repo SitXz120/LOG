@@ -711,31 +711,39 @@
         return;
       }
     
-      // แสดงข้อความกำลังรีเซ็ตในค่า Shooms
+      // แสดงข้อความสถานะกำลังรีเซ็ต
       document.getElementById("shoom-total-value").innerText = '♻️ กำลังรีเซ็ต...';
     
-      const res = await fetch('/reset', {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token })
-      });
+      try {
+        const res = await fetch('/reset', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token })
+        });
     
-      if (res.ok) {
+        if (!res.ok) {
+          throw new Error("การรีเซ็ตไม่สำเร็จ");
+        }
+    
+        // ล้าง UI ทุกจุด
         document.getElementById("score-table").innerHTML = '';
         document.getElementById("shoom-total-value").innerText = '0';
         document.getElementById("online-count").innerText = '0';
         document.getElementById("offline-count").innerText = '0';
         document.getElementById("total-players").innerText = '0';
-      
-        // ✅ reset token display ด้วย
         document.getElementById("revive-token").innerText = '0';
         document.getElementById("fullgrow-token").innerText = '0';
         document.getElementById("colorchange-token").innerText = '0';
         document.getElementById("partialgrow-token").innerText = '0';
-      
+    
+        // รีโหลดข้อมูลใหม่เพื่อความชัวร์
+        await fetchScores();
+    
+        // ปิด modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('resetConfirmModal'));
         modal.hide();
-      }else {
+      } catch (error) {
+        console.error("❌ Reset failed:", error);
         alert("เกิดข้อผิดพลาดในการรีเซ็ต Shooms");
       }
     }
