@@ -370,23 +370,35 @@
   </div>
 
   <!-- ✅ Summary Row -->
-<div class="d-flex flex-wrap gap-3 mb-4 justify-content-between">
-  <button class="btn btn-danger btn-glow fw-bold"
-          data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
-    🗑️ รีเซ็ต Shooms ทั้งหมด
-  </button>
-  
-  <button class="btn btn-success btn-glow fw-bold"
-          onclick="copyScript()">
-    📋 Get Script
-  </button>
+<div class="row mb-4 align-items-stretch g-3">
+  <div class="col-md-4">
+    <button class="btn btn-danger btn-glow fw-bold w-100 h-100"
+            data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
+      🗑️ รีเซ็ต Shooms ทั้งหมด
+    </button>
+  </div>
 
-  <button class="btn btn-info btn-glow fw-bold"
-          onclick="openEarningModal()">
-    💰 คำนวณรายได้
-  </button>
+  <div class="col-md-4">
+    <!-- ✅ กล่อง Total Shooms -->
+    <div id="total" class="summary-card h-100 d-flex flex-column justify-content-center text-center">
+      <h5><span class="highlight-account">Total</span> <span class="text-danger">Shooms</span></h5>
+      <div class="fs-4 fw-bold d-flex align-items-center justify-content-center gap-2">
+        <span id="shoom-total-value">0</span>
+        <img src="images/shoom.png" alt="Shoom Icon" style="height: 24px;">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 d-flex flex-column gap-2">
+    <button class="btn btn-success btn-glow fw-bold w-100" onclick="copyScript()">
+      📋 Get Script
+    </button>
+    <button class="btn btn-info btn-glow fw-bold w-100" onclick="openEarningModal()">
+      💰 คำนวณรายได้
+    </button>
+    <p class="text-info mb-0 text-center" id="copyStatus"></p>
+  </div>
 </div>
-<p class="text-info mb-4" id="copyStatus"></p>
 
   <!-- ✅ Table -->
   
@@ -598,8 +610,8 @@
         return;
       }
     
-      // แสดงกำลังรีเซ็ต
-      document.getElementById("total").innerText = '♻️ กำลังรีเซ็ต...';
+      // แสดงข้อความกำลังรีเซ็ตในค่า Shooms
+      document.getElementById("shoom-total-value").innerText = '♻️ กำลังรีเซ็ต...';
     
       const res = await fetch('/reset', {
         method: 'POST',
@@ -609,11 +621,11 @@
     
       if (res.ok) {
         document.getElementById("score-table").innerHTML = '';
-        document.getElementById("total").innerText = '💰 รวมทั้งหมด: 0 Shooms';
+        document.getElementById("shoom-total-value").innerText = '0';
         document.getElementById("online-count").innerText = '0';
         document.getElementById("offline-count").innerText = '0';
+        document.getElementById("total-players").innerText = '0';
     
-        // ✅ ปิด Modal
         const modal = bootstrap.Modal.getInstance(document.getElementById('resetConfirmModal'));
         modal.hide();
       } else {
