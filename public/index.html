@@ -462,11 +462,11 @@
       item.online ? online++ : offline++;
     });
   
-    total.innerText = `💰 รวมทั้งหมด: ${totalScore.toLocaleString()} Shooms`;
+    total.innerText = totalScore.toLocaleString();
     onlineCount.innerText = online;
     offlineCount.innerText = offline;
     document.getElementById('total-players').innerText = scores.length;
-  
+    
     if (lastSortedByShooms) {
       sortTableByShooms(false);
     }
