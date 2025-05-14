@@ -162,6 +162,22 @@
   .text-danger {
     color: #ff5c5c !important;
   }
+  .summary-card.small-card {
+    padding: 0.75rem 1rem;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .summary-card.small-card h5 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+  .summary-card.small-card span {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
 
   </style>
 </head>
@@ -321,19 +337,25 @@
 </div>
 
   <!-- Account Summary -->
-  <div class="summary-card">
-    <h5>Account <span class="highlight-label">Online</span></h5>
-    <span id="online-count">0</span>
-  </div>
-  
-  <div class="summary-card">
-    <h5>Account <span class="highlight-label">Offline</span></h5>
-    <span id="offline-count">0</span>
-  </div>
-  
-  <div class="summary-card">
-    <h5>Total <span class="highlight-label">Accounts</span></h5>
-    <span id="total-players">0</span>
+  <div class="row text-center mb-4">
+    <div class="col-md-4">
+      <div class="summary-card small-card">
+        <h5>Account <span class="highlight-label">Online</span></h5>
+        <span id="online-count">0</span>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="summary-card small-card">
+        <h5>Account <span class="highlight-label">Offline</span></h5>
+        <span id="offline-count">0</span>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="summary-card small-card">
+        <h5>Total <span class="highlight-label">Accounts</span></h5>
+        <span id="total-players">0</span>
+      </div>
+    </div>
   </div>
 
   <!-- ✅ Summary Row -->
