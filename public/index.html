@@ -493,14 +493,40 @@
       item.online ? online++ : offline++;
     });
   
-    document.getElementById("shoom-total-value").innerText = totalScore.toLocaleString();
-    onlineCount.innerText = online;
-    offlineCount.innerText = offline;
-    document.getElementById('total-players').innerText = scores.length;
+    animateNumber(document.getElementById("shoom-total-value"), 
+                  parseInt(document.getElementById("shoom-total-value").innerText.replace(/,/g, '')) || 0, 
+                  totalScore);
+    
+    animateNumber(onlineCount,
+                  parseInt(onlineCount.innerText) || 0,
+                  online);
+    
+    animateNumber(offlineCount,
+                  parseInt(offlineCount.innerText) || 0,
+                  offline);
+    
+    animateNumber(document.getElementById("total-players"),
+                  parseInt(document.getElementById("total-players").innerText) || 0,
+                  scores.length);
     
     if (lastSortedByShooms) {
       sortTableByShooms(false);
     }
+  }
+
+  function animateNumber(el, start, end, duration = 800) {
+    const startTime = performance.now();
+  
+    function update(currentTime) {
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      const currentValue = Math.floor(start + (end - start) * progress);
+      el.innerText = currentValue.toLocaleString();
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+  
+    requestAnimationFrame(update);
   }
 
   function openAuthModal() {
