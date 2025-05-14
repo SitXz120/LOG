@@ -726,10 +726,16 @@
         document.getElementById("online-count").innerText = '0';
         document.getElementById("offline-count").innerText = '0';
         document.getElementById("total-players").innerText = '0';
-    
+      
+        // ✅ reset token display ด้วย
+        document.getElementById("revive-token").innerText = '0';
+        document.getElementById("fullgrow-token").innerText = '0';
+        document.getElementById("colorchange-token").innerText = '0';
+        document.getElementById("partialgrow-token").innerText = '0';
+      
         const modal = bootstrap.Modal.getInstance(document.getElementById('resetConfirmModal'));
         modal.hide();
-      } else {
+      }else {
         alert("เกิดข้อผิดพลาดในการรีเซ็ต Shooms");
       }
     }
