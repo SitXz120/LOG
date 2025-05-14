@@ -498,7 +498,8 @@
       body: JSON.stringify({ token })
     });
   
-    const scores = await res.json();
+    const data = await res.json();
+    const scores = data.entries || [];
     if (!scores || scores.length === 0) return;
   
     const table = document.getElementById('score-table');
