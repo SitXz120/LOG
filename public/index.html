@@ -557,25 +557,25 @@
     animateNumber(
       document.getElementById("revive-token"),
       safeParseNumber(document.getElementById("revive-token").innerText),
-      scores.totalRevive || 0
+      data.totalRevive || 0
     );
   
     animateNumber(
       document.getElementById("fullgrow-token"),
       safeParseNumber(document.getElementById("fullgrow-token").innerText),
-      scores.totalFullGrow || 0
+      data.totalFullGrow || 0
     );
   
     animateNumber(
       document.getElementById("colorchange-token"),
       safeParseNumber(document.getElementById("colorchange-token").innerText),
-      scores.totalColorChange || 0
+      data.totalColorChange || 0
     );
   
     animateNumber(
       document.getElementById("partialgrow-token"),
       safeParseNumber(document.getElementById("partialgrow-token").innerText),
-      scores.totalPartialGrow || 0
+      data.totalPartialGrow || 0
     );
   
     if (lastSortedByShooms) {
