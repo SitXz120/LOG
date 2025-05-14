@@ -410,12 +410,12 @@
     <thead>
       <tr class="text-center">
         <th>#</th>
-        <th>ชื่อผู้เล่น</th>
-        <th>เครื่อง</th> <!-- ✅ เพิ่มคอลัมน์นี้ -->
+        <th>Account</th>
+        <th>PC</th> <!-- ✅ เพิ่มคอลัมน์นี้ -->
         <th onclick="sortTableByShooms()" style="cursor: pointer;">
-          จำนวน Shooms ⬍
+          Shooms ⬍
         </th>
-        <th>สถานะ</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody id="score-table"></tbody>
@@ -448,7 +448,7 @@
     table.innerHTML = '';
     rows.forEach(row => table.appendChild(row));
   
-    header.innerHTML = `จำนวน Shooms ${sortDescending ? 'มาก > น้อย' : 'น้อย > มาก'}`;
+    header.innerHTML = `จำนวน Shooms ${sortDescending ? '⬍ มาก > น้อย' : '⬍ น้อย > มาก'}`;
     lastSortedByShooms = true;
   }
   
