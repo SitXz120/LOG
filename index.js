@@ -88,6 +88,7 @@ app.post('/roblox', (req, res) => {
 });
 
 // ✅ ปลอดภัยกว่า: เช็ค token ก่อนส่ง leaderboard
+// ✅ ปลอดภัยกว่า: เช็ค token ก่อนส่ง leaderboard
 app.post('/data', (req, res) => {
   const { token } = req.body;
   const users = loadUsers();
@@ -101,11 +102,27 @@ app.post('/data', (req, res) => {
     .map(entry => ({
       player: entry.player,
       score: entry.score,
-      device: entry.device || "-", // ✅ เพิ่ม device ตรงนี้
-      online: now - entry.lastSeen <= TIMEOUT
+      device: entry.device || "-",
+      online: now - entry.lastSeen <= TIMEOUT,
+      revive: entry.revive || 0,
+      fullgrow: entry.fullgrow || 0,
+      colorchange: entry.colorchange || 0,
+      partial: entry.partial || 0
     }));
 
-  res.json(entries);
+  // ✅ รวม token ทั้งหมดไว้ที่ root ของ response
+  const totalRevive = entries.reduce((sum, e) => sum + (e.revive || 0), 0);
+  const totalFullGrow = entries.reduce((sum, e) => sum + (e.fullgrow || 0), 0);
+  const totalColorChange = entries.reduce((sum, e) => sum + (e.colorchange || 0), 0);
+  const totalPartialGrow = entries.reduce((sum, e) => sum + (e.partial || 0), 0);
+
+  res.json({
+    totalRevive,
+    totalFullGrow,
+    totalColorChange,
+    totalPartialGrow,
+    entries
+  });
 });
 
 // ✅ ดึงชื่อจาก token
