@@ -763,13 +763,22 @@
       totalIncome += income;
     });
 
-    totalIncomeEl.innerText = totalIncome.toFixed(2);
+    animateNumber(
+      totalIncomeEl,
+      safeParseNumber(totalIncomeEl.innerText),
+      totalIncome,
+      800,
+      2
+    );
   }
 
   function openEarningModal() {
     updateEarningTable(); // คำนวณก่อน
     const modal = new bootstrap.Modal(document.getElementById('earningModal'));
     modal.show(); // เปิด modal ครั้งเดียว
+  }
+  function safeParseNumber(text) {
+    return parseFloat(text.replace(/[^0-9.-]+/g, "")) || 0;
   }
 
   // ✅ ไม่เปิด modal ซ้ำ ใช้แค่คำนวณ
