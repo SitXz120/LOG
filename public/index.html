@@ -383,24 +383,25 @@
 </div>
 
   <!-- ✅ Summary Row -->
-<div class="row mb-4 align-items-stretch g-3">
-  <div class="col-md-4">
-    <button class="btn btn-danger btn-glow fw-bold w-100 h-100"
+<div class="row justify-content-center mb-3 g-2">
+  <div class="col-auto">
+    <button class="btn btn-danger btn-glow fw-bold px-4"
             data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
       🗑️ รีเซ็ต Shooms ทั้งหมด
     </button>
   </div>
-
-  <div class="col-md-4 d-flex flex-column gap-2">
-    <button class="btn btn-success btn-glow fw-bold w-100" onclick="copyScript()">
+  <div class="col-auto">
+    <button class="btn btn-success btn-glow fw-bold px-4" onclick="copyScript()">
       📋 Get Script
     </button>
-    <button class="btn btn-info btn-glow fw-bold w-100" onclick="openEarningModal()">
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-info btn-glow fw-bold px-4" onclick="openEarningModal()">
       💰 คำนวณรายได้
     </button>
-    <p class="text-info mb-0 text-center" id="copyStatus"></p>
   </div>
 </div>
+<p class="text-info mb-4 text-center" id="copyStatus"></p>
 
   <!-- ✅ Table -->
   
