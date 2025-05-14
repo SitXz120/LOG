@@ -178,6 +178,17 @@
     font-size: 1.25rem;
     font-weight: bold;
   }
+  .label-online {
+    color: #00ff88; /* เขียวสด */
+  }
+  
+  .label-offline {
+    color: #ff5c5c; /* แดงแรงฤทธิ์ */
+  }
+  
+  .label-accounts {
+    color: #ffd700; /* สีทอง */
+  }
 
   </style>
 </head>
@@ -340,19 +351,19 @@
   <div class="row text-center mb-4">
     <div class="col-md-4">
       <div class="summary-card small-card">
-        <h5>Account <span class="highlight-label">Online</span></h5>
+        <h5>Account <span class="label-online">Online</span></h5>
         <span id="online-count">0</span>
       </div>
     </div>
     <div class="col-md-4">
       <div class="summary-card small-card">
-        <h5>Account <span class="highlight-label">Offline</span></h5>
+        <h5>Account <span class="label-offline">Offline</span></h5>
         <span id="offline-count">0</span>
       </div>
     </div>
     <div class="col-md-4">
       <div class="summary-card small-card">
-        <h5>Total <span class="highlight-label">Accounts</span></h5>
+        <h5>Total <span class="label-accounts">Accounts</span></h5>
         <span id="total-players">0</span>
       </div>
     </div>
