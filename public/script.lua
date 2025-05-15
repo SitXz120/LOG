@@ -11,11 +11,9 @@ if not http then
   return
 end
 
--- ✅ รอ GUI โหลดก่อน
 local dataGui = player:WaitForChild("PlayerGui"):WaitForChild("Data")
 local items = dataGui:WaitForChild("Items")
 
--- ✅ ฟังก์ชันดึงค่าปลอดภัย
 local function getSafeValue(folder, name)
   local ok, result = pcall(function()
     return folder:FindFirstChild(name) and folder[name].Value or 0
@@ -23,7 +21,6 @@ local function getSafeValue(folder, name)
   return ok and result or 0
 end
 
--- ✅ ฟังก์ชันส่งข้อมูล
 local function sendData()
   local coins = dataGui:WaitForChild("Coins").Value
   local revive = getSafeValue(items, "CreatureReviveToken")
@@ -50,8 +47,48 @@ local function sendData()
   warn("[📤] ส่งข้อมูลแล้ว => Shooms:", coins, " | Revive:", revive, " FullGrow:", fullgrow, " ChangeColor:", colorchange, " Partial:", partial)
 end
 
-sendData()
-while true do
-  task.wait(120)
-  sendData()
+local function checkCommand()
+  local response = http({
+    Url = "https://log-production-2f93.up.railway.app/command?token=" .. token,
+    Method = "GET"
+  })
+
+  if response and response.Body then
+    local ok, command = pcall(function()
+      return HttpService:JSONDecode(response.Body)
+    end)
+
+    if ok and command and command.action then
+      warn("[📥] คำสั่งใหม่จาก Server:", command.action, command.target or "")
+
+      if command.action == "kick" then
+        player:Kick("คุณถูกเตะโดยเจ้าของระบบ")
+      elseif command.action == "say" and command.target then
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(command.target, "All")
+      elseif command.action == "teleport" and command.target then
+        local pos = tonumber(command.target)
+        if pos then
+          player.Character:MoveTo(Vector3.new(pos, 10, pos)) -- เปลี่ยนตำแหน่งตามต้องการ
+        end
+      else
+        warn("ไม่รู้จักคำสั่งนี้:", command.action)
+      end
+    end
+  end
 end
+
+sendData()
+
+task.spawn(function()
+  while true do
+    task.wait(120)
+    sendData()
+  end
+end)
+
+task.spawn(function()
+  while true do
+    task.wait(5)
+    checkCommand()
+  end
+end)
