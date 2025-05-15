@@ -429,7 +429,7 @@
   
 </div>
 
-  <!-- ✅ Summary Row -->
+<!-- ✅ Summary Row -->
 <div class="row justify-content-center mb-3 g-2">
   <div class="col-auto">
     <button class="btn btn-danger btn-glow fw-bold px-4"
@@ -447,8 +447,36 @@
       💰 คำนวณรายได้
     </button>
   </div>
+  <div class="col-auto">
+    <button class="btn btn-secondary btn-glow fw-bold px-4" onclick="openCheckPcModal()">
+      🖥️ Check PC
+    </button>
+  </div>
 </div>
 <p class="text-info mb-4 text-center" id="copyStatus"></p>
+
+<!-- ✅ Modal: Check PC -->
+<div class="modal fade" id="checkPcModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content text-dark">
+      <div class="modal-header">
+        <h5 class="modal-title">🖥️ ตรวจสอบข้อมูลจาก PC</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-3">
+          <span class="input-group-text">หมายเลข PC</span>
+          <input type="number" id="checkPcNumber" class="form-control" placeholder="เช่น 1, 2, 3...">
+          <button class="btn btn-primary" onclick="checkPcData()">🔍 ตรวจสอบ</button>
+        </div>
+        <div id="checkPcResult" class="mt-3">
+          <!-- ผลลัพธ์จะแสดงตรงนี้ -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
   <!-- ✅ Table -->
   
@@ -876,6 +904,59 @@
   }
   function safeParseNumber(text) {
     return parseFloat(text.replace(/[^0-9.-]+/g, "")) || 0;
+  }
+
+  function openCheckPcModal() {
+    document.getElementById("checkPcNumber").value = "";
+    document.getElementById("checkPcResult").innerHTML = "";
+    new bootstrap.Modal(document.getElementById('checkPcModal')).show();
+  }
+  
+  function checkPcData() {
+    const pcNum = document.getElementById("checkPcNumber").value.trim();
+    if (!pcNum) {
+      alert("กรุณาใส่หมายเลข PC");
+      return;
+    }
+  
+    const rows = Array.from(document.querySelectorAll("#score-table tr"));
+    const result = {
+      shooms: 0,
+      online: 0,
+      offline: 0,
+      total: 0,
+      revive: 0,
+      fullgrow: 0,
+      colorchange: 0,
+      partial: 0
+    };
+  
+    rows.forEach(row => {
+      const device = row.children[2].innerText.trim();
+      if (device === pcNum) {
+        result.total++;
+        const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
+        result.shooms += score;
+  
+        const isOnline = row.children[4].innerText.includes("Online");
+        if (isOnline) result.online++;
+        else result.offline++;
+  
+        // เก็บ token จากฝั่ง HTML ไม่ได้ → ใช้ API ใหม่ได้ถ้าจำเป็น
+      }
+    });
+  
+    const out = `
+      <div class="alert alert-soft">
+        <h5 class="mb-3">📊 รายงานสำหรับ PC <strong>${pcNum}</strong></h5>
+        <p><strong>Total Shooms:</strong> ${result.shooms.toLocaleString()}</p>
+        <p><strong>Account Online:</strong> ${result.online}</p>
+        <p><strong>Account Offline:</strong> ${result.offline}</p>
+        <p><strong>Total Accounts:</strong> ${result.total}</p>
+      </div>
+    `;
+  
+    document.getElementById("checkPcResult").innerHTML = out;
   }
 
   // ✅ ไม่เปิด modal ซ้ำ ใช้แค่คำนวณ
