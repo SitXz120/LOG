@@ -78,7 +78,7 @@ local function checkCommand()
       if command.action == "kick" then
         acknowledgeCommand()
         task.wait(0.5)
-        player:Kick("คุณถูกเตะโดยเจ้าของระบบ")
+        player:Kick("โดน Kick โดย Website Moji")
       elseif command.action == "say" and command.target then
         acknowledgeCommand()
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(command.target, "All")
