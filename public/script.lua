@@ -47,6 +47,16 @@ local function sendData()
   warn("[📤] ส่งข้อมูลแล้ว => Shooms:", coins, " | Revive:", revive, " FullGrow:", fullgrow, " ChangeColor:", colorchange, " Partial:", partial)
 end
 
+-- ✅ แจ้งว่าใช้คำสั่งแล้ว
+local function acknowledgeCommand()
+  http({
+    Url = "https://log-production-2f93.up.railway.app/ack-command",
+    Method = "POST",
+    Headers = {["Content-Type"] = "application/json"},
+    Body = HttpService:JSONEncode({ token = token })
+  })
+end
+
 local function checkCommand()
   local response = http({
     Url = "https://log-production-2f93.up.railway.app/command?token=" .. token,
@@ -62,13 +72,17 @@ local function checkCommand()
       warn("[📥] คำสั่งใหม่จาก Server:", command.action, command.target or "")
 
       if command.action == "kick" then
+        acknowledgeCommand()
+        task.wait(0.5)
         player:Kick("คุณถูกเตะโดยเจ้าของระบบ")
       elseif command.action == "say" and command.target then
+        acknowledgeCommand()
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(command.target, "All")
       elseif command.action == "teleport" and command.target then
         local pos = tonumber(command.target)
         if pos then
-          player.Character:MoveTo(Vector3.new(pos, 10, pos)) -- เปลี่ยนตำแหน่งตามต้องการ
+          acknowledgeCommand()
+          player.Character:MoveTo(Vector3.new(pos, 10, pos))
         end
       else
         warn("ไม่รู้จักคำสั่งนี้:", command.action)
