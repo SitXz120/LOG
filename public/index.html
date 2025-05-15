@@ -205,29 +205,20 @@
     color: #e0e0e0 !important;
   }
 
-  #pcCheckboxContainer .form-check-label {
-    padding: 6px 12px;
+  #pcCheckboxContainer label.form-check {
+    display: flex;
+    align-items: center;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 6px;
+    padding: 4px 8px;
     margin-right: 6px;
+    margin-bottom: 6px;
     cursor: pointer;
-    user-select: none;
     transition: background 0.3s;
   }
   
-  #pcCheckboxContainer input:checked + label,
-  #pcCheckboxContainer .form-check-label:hover {
+  #pcCheckboxContainer label.form-check:hover {
     background-color: rgba(0, 255, 204, 0.1);
-  }
-
-  #pcCheckboxContainer .form-check {
-    display: flex;
-    align-items: center;
-    padding: 4px 8px;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    margin-right: 6px;
-    margin-bottom: 6px;
   }
   
   #pcCheckboxContainer .form-check-input {
@@ -966,16 +957,15 @@
   
     const container = document.getElementById("pcCheckboxContainer");
     container.innerHTML = '';
+    
     [...devices].sort((a, b) => a - b).forEach(num => {
-      const div = document.createElement("div");
-      div.className = "form-check";
-      div.innerHTML = `
-        <label class="form-check">
-          <input class="form-check-input" type="checkbox" value="${num}" id="pc${num}">
-          <span class="form-check-label">PC ${num}</span>
-        </label>
+      const label = document.createElement("label");
+      label.className = "form-check"; // ใช้ label แทน div
+      label.innerHTML = `
+        <input class="form-check-input" type="checkbox" value="${num}" id="pc${num}">
+        <span class="form-check-label">PC ${num}</span>
       `;
-      container.appendChild(div);
+      container.appendChild(label);
     });
   
     document.getElementById("checkPcResult").innerHTML = '';
