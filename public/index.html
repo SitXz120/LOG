@@ -615,9 +615,12 @@
           ${item.online
             ? '<span class="badge bg-success pulse-online">Online</span>'
             : '<span class="badge bg-secondary pulse-offline">Offline</span>'}
+          ${item.bugged
+            ? '<span class="badge bg-warning text-dark ms-1">BUG</span>'
+            : ''}
         </td>
         <td class="text-center">
-          <button class="btn btn-sm btn-danger fw-bold" onclick="kickPlayer('${item.player}')">🦵 Kick</button>
+          <button class="btn btn-sm btn-danger fw-bold" onclick="kickPlayer('${item.player}')">Kick</button>
         </td>
       `;
     
