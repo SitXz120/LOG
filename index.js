@@ -7,6 +7,7 @@ const app = express();
 const USERS_FILE = './users.json';
 const TIMEOUT = 150000;
 let scores = []; // ✅ ใช้ object แทน array
+let commands = {}; // 🔁 เก็บคำสั่งไว้ต่อ username
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -139,6 +140,33 @@ app.post('/reset', (req, res) => {
 
   scores = scores.filter(s => s.username !== user.username);
   res.send("OK");
+});
+
+// ✅ ส่งคำสั่งจากเว็บมาเก็บไว้
+app.post('/send-command', (req, res) => {
+  const { token, action, target } = req.body;
+  if (!token || !action) return res.status(400).send("Missing required fields");
+
+  const users = loadUsers();
+  const user = users.find(u => u.token === token);
+  if (!user) return res.status(401).send("Invalid token");
+
+  commands[user.username] = { action, target };
+  res.send("Command stored");
+});
+
+// ✅ ให้ Roblox ดึงคำสั่งล่าสุด
+app.get('/command', (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.status(400).send("Token is required");
+
+  const users = loadUsers();
+  const user = users.find(u => u.token === token);
+  if (!user) return res.status(401).send("Invalid token");
+
+  const cmd = commands[user.username] || null;
+  delete commands[user.username]; // 🧼 ล้างหลังเรียก
+  res.json(cmd);
 });
 
 const PORT = process.env.PORT || 3000;
