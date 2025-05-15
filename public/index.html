@@ -195,6 +195,36 @@
     color: white;
   }
 
+  .modal-content {
+    background-color: rgba(30, 30, 30, 0.97) !important;
+    color: #f8f9fa;
+  }
+  
+  .modal-header h5,
+  .modal-body,
+  .modal-footer {
+    color: #f8f9fa !important;
+  }
+  
+  .form-check-label {
+    color: #e0e0e0 !important;
+  }
+
+  #pcCheckboxContainer .form-check-label {
+    padding: 6px 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    margin-right: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  
+  #pcCheckboxContainer input:checked + label,
+  #pcCheckboxContainer .form-check-label:hover {
+    background-color: rgba(0, 255, 204, 0.1);
+  }
+
   </style>
 </head>
 <body>
@@ -471,7 +501,7 @@
       <div class="modal-body">
         <div class="input-group mb-3">
           <span class="input-group-text">หมายเลข PC</span>
-          <input type="number" id="checkPcNumber" class="form-control" placeholder="เช่น 1, 2, 3...">
+          <div id="pcCheckboxContainer" class="form-check d-flex flex-wrap gap-2"></div>
           <button class="btn btn-primary" onclick="checkPcData()">🔍 ตรวจสอบ</button>
         </div>
         <div id="checkPcResult" class="mt-3">
@@ -924,9 +954,11 @@
   }
   
   function checkPcData() {
-    const pcNum = document.getElementById("checkPcNumber").value.trim();
-    if (!pcNum) {
-      alert("กรุณาใส่หมายเลข PC");
+    const checked = [...document.querySelectorAll("#pcCheckboxContainer input:checked")]
+      .map(input => input.value);
+  
+    if (checked.length === 0) {
+      alert("กรุณาเลือกหมายเลข PC ที่ต้องการตรวจสอบ");
       return;
     }
   
@@ -941,21 +973,6 @@
       colorchange: 0,
       partial: 0
     };
-  
-    rows.forEach(row => {
-      const device = row.children[2].innerText.trim();
-      if (device === pcNum) {
-        result.total++;
-        const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
-        result.shooms += score;
-  
-        const isOnline = row.children[4].innerText.includes("Online");
-        if (isOnline) result.online++;
-        else result.offline++;
-  
-        // เก็บ token จากฝั่ง HTML ไม่ได้ → ใช้ API ใหม่ได้ถ้าจำเป็น
-      }
-    });
   
     let tableHtml = `
       <div class="table-responsive">
@@ -973,43 +990,40 @@
           </thead>
           <tbody>
     `;
-    
+  
     rows.forEach(row => {
       const device = row.children[2].innerText.trim();
-      if (device === pcNum) {
-        result.total++;
-        const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
-        result.shooms += score;
-    
-        const isOnline = row.children[4].innerText.includes("Online");
-        const statusText = isOnline ? "✅ Online" : "❌ Offline";
-        isOnline ? result.online++ : result.offline++;
-    
-        const player = row.children[1].innerText;
-        const revive = parseInt(row.querySelector(".revive").innerText) || 0;
-        const fullgrow = parseInt(row.querySelector(".fullgrow").innerText) || 0;
-        const colorchange = parseInt(row.querySelector(".colorchange").innerText) || 0;
-        const partial = parseInt(row.querySelector(".partial").innerText) || 0;
-    
-        result.revive += revive;
-        result.fullgrow += fullgrow;
-        result.colorchange += colorchange;
-        result.partial += partial;
-    
-        tableHtml += `
-          <tr class="text-center">
-            <td>${player}</td>
-            <td>${score.toLocaleString()}</td>
-            <td>${statusText}</td>
-            <td>${revive}</td>
-            <td>${fullgrow}</td>
-            <td>${colorchange}</td>
-            <td>${partial}</td>
-          </tr>
-        `;
-      }
+      if (!checked.includes(device)) return;
+  
+      const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
+      const isOnline = row.children[4].innerText.includes("Online");
+      const player = row.children[1].innerText;
+      const revive = parseInt(row.querySelector(".revive")?.innerText) || 0;
+      const fullgrow = parseInt(row.querySelector(".fullgrow")?.innerText) || 0;
+      const colorchange = parseInt(row.querySelector(".colorchange")?.innerText) || 0;
+      const partial = parseInt(row.querySelector(".partial")?.innerText) || 0;
+  
+      result.total++;
+      result.shooms += score;
+      isOnline ? result.online++ : result.offline++;
+      result.revive += revive;
+      result.fullgrow += fullgrow;
+      result.colorchange += colorchange;
+      result.partial += partial;
+  
+      tableHtml += `
+        <tr class="text-center">
+          <td>${player}</td>
+          <td>${score.toLocaleString()}</td>
+          <td>${isOnline ? "✅ Online" : "❌ Offline"}</td>
+          <td>${revive}</td>
+          <td>${fullgrow}</td>
+          <td>${colorchange}</td>
+          <td>${partial}</td>
+        </tr>
+      `;
     });
-    
+  
     tableHtml += `
           </tbody>
         </table>
@@ -1022,10 +1036,32 @@
         <p>Revive: ${result.revive}, FullGrow: ${result.fullgrow}, ChangeColor: ${result.colorchange}, PartialGrow: ${result.partial}</p>
       </div>
     `;
-    
+  
     document.getElementById("checkPcResult").innerHTML = tableHtml;
   }
-  
+
+    function openCheckPcModal() {
+      const devices = new Set();
+      document.querySelectorAll("#score-table tr").forEach(row => {
+        const device = row.children[2]?.innerText.trim();
+        if (device && device !== '-') devices.add(device);
+      });
+    
+      const container = document.getElementById("pcCheckboxContainer");
+      container.innerHTML = '';
+      [...devices].sort((a, b) => a - b).forEach(num => {
+        const label = document.createElement("label");
+        label.className = "form-check-label text-light";
+        label.innerHTML = `
+          <input class="form-check-input" type="checkbox" value="${num}"> PC ${num}
+        `;
+        container.appendChild(label);
+      });
+    
+      document.getElementById("checkPcResult").innerHTML = '';
+      new bootstrap.Modal(document.getElementById('checkPcModal')).show();
+    }
+
 </script>
 
 </body>
