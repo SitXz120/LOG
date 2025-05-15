@@ -151,21 +151,22 @@ app.post('/send-command', (req, res) => {
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
 
-  commands[user.username] = { action, target };
+  commands[target] = { action, target };
   res.send("Command stored");
 });
 
 // ✅ ให้ Roblox ดึงคำสั่งล่าสุด
 app.get('/command', (req, res) => {
-  const { token } = req.query;
-  if (!token) return res.status(400).send("Token is required");
+  const { token, playerName } = req.query;
+  if (!token || !playerName) return res.status(400).send("Missing token or playerName");
 
   const users = loadUsers();
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
 
-  const cmd = commands[user.username] || null;
-  res.json(cmd); // 👈 แค่ส่งออก
+  const cmd = commands[playerName];
+  delete commands[playerName]; // ลบทิ้งหลังใช้
+  res.json(cmd || {});
 });
 
 app.post('/ack-command', (req, res) => {
