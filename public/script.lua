@@ -93,7 +93,7 @@ sendData()
 
 task.spawn(function()
   while true do
-    task.wait(120)
+    task.wait(60)
     sendData()
   end
 end)
