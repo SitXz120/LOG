@@ -8,6 +8,7 @@ const USERS_FILE = './users.json';
 const TIMEOUT = 150000;
 let scores = []; // ✅ ใช้ object แทน array
 let commands = {}; // 🔁 เก็บคำสั่งไว้ต่อ username
+let lastShoomMap = {};
 
 app.use(bodyParser.json());
 app.use(express.static('public'));
@@ -65,6 +66,9 @@ app.post('/roblox', (req, res) => {
   const name = playerName || user.username;
   const now = Date.now();
 
+  const isBugged = lastShoomMap[name] === score;
+  lastShoomMap[name] = score;
+
   const existing = scores.find(s => s.player === name);
   
   if (existing) {
@@ -75,6 +79,7 @@ app.post('/roblox', (req, res) => {
     existing.fullgrow = fullgrow;
     existing.colorchange = colorchange;
     existing.partial = partial;
+    existing.bugged = isBugged;
   } else {
     scores.push({
       player: name,
@@ -85,7 +90,8 @@ app.post('/roblox', (req, res) => {
       revive,
       fullgrow,
       colorchange,
-      partial
+      partial,
+      bugged: isBugged
     });
   }
 
@@ -110,7 +116,8 @@ app.post('/data', (req, res) => {
       player: entry.player,
       score: entry.score,
       device: entry.device || "-",
-      online: now - entry.lastSeen <= TIMEOUT
+      online: now - entry.lastSeen <= TIMEOUT,
+      bugged: entry.bugged || false
     })),
     totalRevive: entries.reduce((sum, e) => sum + (e.revive || 0), 0),
     totalFullGrow: entries.reduce((sum, e) => sum + (e.fullgrow || 0), 0),
