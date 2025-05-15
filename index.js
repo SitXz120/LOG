@@ -66,8 +66,13 @@ app.post('/roblox', (req, res) => {
   const name = playerName || user.username;
   const now = Date.now();
 
-  const isBugged = lastShoomMap[name] === score;
-  lastShoomMap[name] = score;
+  // เก็บ history 3 ค่า Shoom ล่าสุด
+  if (!lastShoomMap[name]) lastShoomMap[name] = [];
+  lastShoomMap[name].push(score);
+  if (lastShoomMap[name].length > 3) lastShoomMap[name].shift();
+  
+  // ถ้า 3 ค่าล่าสุดเท่ากันหมด → ถือว่า bugged จริง
+  const isBugged = lastShoomMap[name].every(s => s === score);
 
   const existing = scores.find(s => s.player === name);
   
