@@ -573,6 +573,8 @@
     header.innerHTML = `จำนวน Shooms ${sortDescending ? '⬍ มาก > น้อย' : '⬍ น้อย > มาก'}`;
     lastSortedByShooms = true;
   }
+
+  const shoomHistory = {};
   
   async function fetchScores() {
     const token = localStorage.getItem('userToken');
@@ -598,9 +600,16 @@
     let offline = 0;
   
     scores.forEach((item, i) => {
-      const tr = document.createElement('tr');
+      const name = item.player;
+      const score = Number(item.score);
     
-      // ➕ เพิ่มข้อมูลลงใน dataset ของแถว
+      // History Shooms
+      if (!shoomHistory[name]) shoomHistory[name] = [];
+      shoomHistory[name].push(score);
+      if (shoomHistory[name].length > 3) shoomHistory[name].shift();
+      const isBugged = shoomHistory[name].length === 3 && shoomHistory[name].every(s => s === score);
+    
+      const tr = document.createElement('tr');
       tr.dataset.revive = item.revive || 0;
       tr.dataset.fullgrow = item.fullgrow || 0;
       tr.dataset.colorchange = item.colorchange || 0;
@@ -608,24 +617,24 @@
     
       tr.innerHTML = `
         <td class="text-center">${i + 1}</td>
-        <td>${item.player}</td>
+        <td>${name}</td>
         <td class="text-center">${item.device || '-'}</td>
-        <td class="text-end">${Number(item.score).toLocaleString()}</td>
+        <td class="text-end">${score.toLocaleString()}</td>
         <td class="text-center">
           ${item.online
             ? '<span class="badge bg-success pulse-online">Online</span>'
             : '<span class="badge bg-secondary pulse-offline">Offline</span>'}
-          ${item.bugged
+          ${isBugged
             ? '<span class="badge bg-warning text-dark ms-1">BUG</span>'
             : ''}
         </td>
         <td class="text-center">
-          <button class="btn btn-sm btn-danger fw-bold" onclick="kickPlayer('${item.player}')">Kick</button>
+          <button class="btn btn-sm btn-danger fw-bold" onclick="kickPlayer('${name}')">Kick</button>
         </td>
       `;
     
       table.appendChild(tr);
-      totalScore += Number(item.score);
+      totalScore += score;
       item.online ? online++ : offline++;
     });
 
