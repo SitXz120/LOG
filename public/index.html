@@ -573,8 +573,6 @@
     header.innerHTML = `จำนวน Shooms ${sortDescending ? '⬍ มาก > น้อย' : '⬍ น้อย > มาก'}`;
     lastSortedByShooms = true;
   }
-
-  const shoomHistory = {};
   
   async function fetchScores() {
     const token = localStorage.getItem('userToken');
@@ -603,11 +601,7 @@
       const name = item.player;
       const score = Number(item.score);
     
-      // History Shooms
-      if (!shoomHistory[name]) shoomHistory[name] = [];
-      shoomHistory[name].push(score);
-      if (shoomHistory[name].length > 3) shoomHistory[name].shift();
-      const isBugged = shoomHistory[name].length === 3 && shoomHistory[name].every(s => s === score);
+      const isBugged = item.bugged === true;
     
       const tr = document.createElement('tr');
       tr.dataset.revive = item.revive || 0;
