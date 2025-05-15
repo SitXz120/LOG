@@ -190,6 +190,11 @@
     color: #ffd700; /* สีทอง */
   }
 
+  .modal-content {
+    background-color: rgba(20, 20, 20, 0.95) !important;
+    color: white;
+  }
+
   </style>
 </head>
 <body>
@@ -562,6 +567,10 @@
             ? '<span class="badge bg-success pulse-online">Online</span>'
             : '<span class="badge bg-secondary pulse-offline">Offline</span>'}
         </td>
+        <td hidden class="revive">${item.revive || 0}</td>
+        <td hidden class="fullgrow">${item.fullgrow || 0}</td>
+        <td hidden class="colorchange">${item.colorchange || 0}</td>
+        <td hidden class="partial">${item.partial || 0}</td>
       `;
       table.appendChild(tr);
       totalScore += Number(item.score);
@@ -946,18 +955,73 @@
       }
     });
   
-    const out = `
-      <div class="alert alert-soft">
-        <h5 class="mb-3">📊 รายงานสำหรับ PC <strong>${pcNum}</strong></h5>
-        <p><strong>Total Shooms:</strong> ${result.shooms.toLocaleString()}</p>
-        <p><strong>Account Online:</strong> ${result.online}</p>
-        <p><strong>Account Offline:</strong> ${result.offline}</p>
-        <p><strong>Total Accounts:</strong> ${result.total}</p>
+    let tableHtml = `
+      <div class="table-responsive">
+        <table class="table table-dark table-bordered table-hover">
+          <thead class="table-light text-center">
+            <tr>
+              <th>Player</th>
+              <th>Shooms</th>
+              <th>Status</th>
+              <th>Revive</th>
+              <th>FullGrow</th>
+              <th>ChangeColor</th>
+              <th>PartialGrow</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    rows.forEach(row => {
+      const device = row.children[2].innerText.trim();
+      if (device === pcNum) {
+        result.total++;
+        const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
+        result.shooms += score;
+    
+        const isOnline = row.children[4].innerText.includes("Online");
+        const statusText = isOnline ? "✅ Online" : "❌ Offline";
+        isOnline ? result.online++ : result.offline++;
+    
+        const player = row.children[1].innerText;
+        const revive = parseInt(row.querySelector(".revive").innerText) || 0;
+        const fullgrow = parseInt(row.querySelector(".fullgrow").innerText) || 0;
+        const colorchange = parseInt(row.querySelector(".colorchange").innerText) || 0;
+        const partial = parseInt(row.querySelector(".partial").innerText) || 0;
+    
+        result.revive += revive;
+        result.fullgrow += fullgrow;
+        result.colorchange += colorchange;
+        result.partial += partial;
+    
+        tableHtml += `
+          <tr class="text-center">
+            <td>${player}</td>
+            <td>${score.toLocaleString()}</td>
+            <td>${statusText}</td>
+            <td>${revive}</td>
+            <td>${fullgrow}</td>
+            <td>${colorchange}</td>
+            <td>${partial}</td>
+          </tr>
+        `;
+      }
+    });
+    
+    tableHtml += `
+          </tbody>
+        </table>
+      </div>
+      <div class="text-end mt-3">
+        <p><strong>📊 รวม:</strong></p>
+        <p>Total Shooms: ${result.shooms.toLocaleString()}</p>
+        <p>Total Accounts: ${result.total}</p>
+        <p>Online: ${result.online} | Offline: ${result.offline}</p>
+        <p>Revive: ${result.revive}, FullGrow: ${result.fullgrow}, ChangeColor: ${result.colorchange}, PartialGrow: ${result.partial}</p>
       </div>
     `;
-  
-    document.getElementById("checkPcResult").innerHTML = out;
-  }
+    
+    document.getElementById("checkPcResult").innerHTML = tableHtml;
 
   // ✅ ไม่เปิด modal ซ้ำ ใช้แค่คำนวณ
   document.getElementById("shoomRate").addEventListener("input", updateEarningTable);
