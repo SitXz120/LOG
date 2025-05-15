@@ -225,6 +225,23 @@
     background-color: rgba(0, 255, 204, 0.1);
   }
 
+  #pcCheckboxContainer .form-check {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 6px 12px;
+    transition: background 0.3s;
+  }
+  
+  #pcCheckboxContainer .form-check:hover {
+    background-color: rgba(0, 255, 204, 0.1);
+  }
+  
+  #pcCheckboxContainer .form-check-input {
+    margin-right: 6px;
+  }
+
   </style>
 </head>
 <body>
@@ -499,9 +516,12 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <div class="input-group mb-3">
-          <div id="pcCheckboxContainer" class="form-check d-flex flex-wrap gap-2"></div>
-          <button class="btn btn-primary" onclick="checkPcData()">🔍 ตรวจสอบ</button>
+        <!-- ✅ เปลี่ยนจาก input-group เป็น flex layout -->
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+          <div id="pcCheckboxContainer" class="d-flex flex-wrap gap-2"></div>
+          <button class="btn btn-primary d-flex align-items-center gap-1" onclick="checkPcData()">
+            🔍 ตรวจสอบ
+          </button>
         </div>
         <div id="checkPcResult" class="mt-3">
           <!-- ผลลัพธ์จะแสดงตรงนี้ -->
@@ -510,7 +530,6 @@
     </div>
   </div>
 </div>
-
 
   <!-- ✅ Table -->
   
@@ -947,8 +966,25 @@
   }
 
   function openCheckPcModal() {
-    document.getElementById("checkPcNumber").value = "";
-    document.getElementById("checkPcResult").innerHTML = "";
+    const devices = new Set();
+    document.querySelectorAll("#score-table tr").forEach(row => {
+      const device = row.children[2]?.innerText.trim();
+      if (device && device !== '-') devices.add(device);
+    });
+  
+    const container = document.getElementById("pcCheckboxContainer");
+    container.innerHTML = '';
+    [...devices].sort((a, b) => a - b).forEach(num => {
+      const div = document.createElement("div");
+      div.className = "form-check";
+      div.innerHTML = `
+        <input class="form-check-input" type="checkbox" value="${num}" id="pc${num}">
+        <label class="form-check-label" for="pc${num}">PC ${num}</label>
+      `;
+      container.appendChild(div);
+    });
+  
+    document.getElementById("checkPcResult").innerHTML = '';
     new bootstrap.Modal(document.getElementById('checkPcModal')).show();
   }
   
