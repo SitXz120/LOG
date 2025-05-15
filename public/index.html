@@ -1080,28 +1080,6 @@
     document.getElementById("checkPcResult").innerHTML = tableHtml;
   }
 
-    function openCheckPcModal() {
-      const devices = new Set();
-      document.querySelectorAll("#score-table tr").forEach(row => {
-        const device = row.children[2]?.innerText.trim();
-        if (device && device !== '-') devices.add(device);
-      });
-    
-      const container = document.getElementById("pcCheckboxContainer");
-      container.innerHTML = '';
-      [...devices].sort((a, b) => a - b).forEach(num => {
-        const label = document.createElement("label");
-        label.className = "form-check-label text-light";
-        label.innerHTML = `
-          <input class="form-check-input" type="checkbox" value="${num}"> PC ${num}
-        `;
-        container.appendChild(label);
-      });
-    
-      document.getElementById("checkPcResult").innerHTML = '';
-      new bootstrap.Modal(document.getElementById('checkPcModal')).show();
-    }
-
 </script>
 
 </body>
