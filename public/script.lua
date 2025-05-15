@@ -52,6 +52,6 @@ end
 
 sendData()
 while true do
-  task.wait(30)
+  task.wait(120)
   sendData()
 end
