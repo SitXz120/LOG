@@ -537,6 +537,7 @@
           Shooms ⬍
         </th>
         <th>Status</th>
+        <th>Kick</th>
       </tr>
     </thead>
     <tbody id="score-table"></tbody>
@@ -614,6 +615,9 @@
           ${item.online
             ? '<span class="badge bg-success pulse-online">Online</span>'
             : '<span class="badge bg-secondary pulse-offline">Offline</span>'}
+        </td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-danger fw-bold" onclick="kickPlayer('${item.player}')">🦵 Kick</button>
         </td>
       `;
     
@@ -1067,6 +1071,36 @@
     `;
   
     document.getElementById("checkPcResult").innerHTML = tableHtml;
+  }
+
+  async function kickPlayer(player) {
+    const token = localStorage.getItem("userToken");
+    if (!token) {
+      alert("กรุณา Login ก่อนใช้งานคำสั่งนี้");
+      return;
+    }
+  
+    try {
+      const res = await fetch('/send-command', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          token,
+          action: "kick",
+          target: player
+        })
+      });
+  
+      if (res.ok) {
+        alert(`🦵 ส่งคำสั่ง Kick "${player}" สำเร็จ`);
+      } else {
+        const msg = await res.text();
+        alert("❌ Kick ล้มเหลว: " + msg);
+      }
+    } catch (err) {
+      console.error("❌ เกิดข้อผิดพลาด:", err);
+      alert("⚠️ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+    }
   }
 
 </script>
