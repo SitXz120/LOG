@@ -598,6 +598,13 @@
   
     scores.forEach((item, i) => {
       const tr = document.createElement('tr');
+    
+      // ➕ เพิ่มข้อมูลลงใน dataset ของแถว
+      tr.dataset.revive = item.revive || 0;
+      tr.dataset.fullgrow = item.fullgrow || 0;
+      tr.dataset.colorchange = item.colorchange || 0;
+      tr.dataset.partial = item.partial || 0;
+    
       tr.innerHTML = `
         <td class="text-center">${i + 1}</td>
         <td>${item.player}</td>
@@ -608,16 +615,13 @@
             ? '<span class="badge bg-success pulse-online">Online</span>'
             : '<span class="badge bg-secondary pulse-offline">Offline</span>'}
         </td>
-        <td hidden class="revive">${item.revive || 0}</td>
-        <td hidden class="fullgrow">${item.fullgrow || 0}</td>
-        <td hidden class="colorchange">${item.colorchange || 0}</td>
-        <td hidden class="partial">${item.partial || 0}</td>
       `;
+    
       table.appendChild(tr);
       totalScore += Number(item.score);
       item.online ? online++ : offline++;
     });
-  
+
     animateNumber(
       document.getElementById("shoom-total-value"),
       safeParseNumber(document.getElementById("shoom-total-value").innerText),
@@ -1013,10 +1017,10 @@
       const score = parseInt(row.children[3].innerText.replace(/,/g, '')) || 0;
       const isOnline = row.children[4].innerText.includes("Online");
       const player = row.children[1].innerText;
-      const revive = parseInt(row.querySelector(".revive")?.innerText) || 0;
-      const fullgrow = parseInt(row.querySelector(".fullgrow")?.innerText) || 0;
-      const colorchange = parseInt(row.querySelector(".colorchange")?.innerText) || 0;
-      const partial = parseInt(row.querySelector(".partial")?.innerText) || 0;
+      const revive = parseInt(row.dataset.revive || 0);
+      const fullgrow = parseInt(row.dataset.fullgrow || 0);
+      const colorchange = parseInt(row.dataset.colorchange || 0);
+      const partial = parseInt(row.dataset.partial || 0);
   
       result.total++;
       result.shooms += score;
