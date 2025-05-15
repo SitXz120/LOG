@@ -170,16 +170,17 @@ app.get('/command', (req, res) => {
 });
 
 app.post('/ack-command', (req, res) => {
-  const { token } = req.body;
-  if (!token) return res.status(400).send("Missing token");
+  const { token, playerName } = req.body;
+  if (!token || !playerName) return res.status(400).send("Missing token or playerName");
 
   const users = loadUsers();
   const user = users.find(u => u.token === token);
   if (!user) return res.status(401).send("Invalid token");
 
-  delete commands[user.username]; // ✅ ค่อยลบตรงนี้
+  delete commands[playerName]; // ✅ ลบตาม player ที่ยืนยัน
   res.send("Acknowledged");
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🌐 Server listening on port ${PORT}`));
