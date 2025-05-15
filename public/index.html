@@ -223,14 +223,11 @@
   #pcCheckboxContainer .form-check {
     display: flex;
     align-items: center;
+    padding: 4px 8px;
     background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 6px 12px;
-    transition: background 0.3s;
-  }
-  
-  #pcCheckboxContainer .form-check:hover {
-    background-color: rgba(0, 255, 204, 0.1);
+    border-radius: 6px;
+    margin-right: 6px;
+    margin-bottom: 6px;
   }
   
   #pcCheckboxContainer .form-check-input {
@@ -973,8 +970,10 @@
       const div = document.createElement("div");
       div.className = "form-check";
       div.innerHTML = `
-        <input class="form-check-input" type="checkbox" value="${num}" id="pc${num}">
-        <label class="form-check-label" for="pc${num}">PC ${num}</label>
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" value="${num}" id="pc${num}">
+          <span class="form-check-label">PC ${num}</span>
+        </label>
       `;
       container.appendChild(div);
     });
