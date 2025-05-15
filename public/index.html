@@ -1035,10 +1035,6 @@
           <td>${player}</td>
           <td>${score.toLocaleString()}</td>
           <td>${isOnline ? "✅ Online" : "❌ Offline"}</td>
-          <td>${revive}</td>
-          <td>${fullgrow}</td>
-          <td>${colorchange}</td>
-          <td>${partial}</td>
         </tr>
       `;
     });
@@ -1049,7 +1045,6 @@
         <p>Total Shooms: ${result.shooms.toLocaleString()}</p>
         <p>Total Accounts: ${result.total}</p>
         <p>Online: ${result.online} | Offline: ${result.offline}</p>
-        <p>Revive: ${result.revive}, FullGrow: ${result.fullgrow}, ChangeColor: ${result.colorchange}, PartialGrow: ${result.partial}</p>
       </div>
     `;
   
@@ -1062,10 +1057,6 @@
               <th>Player</th>
               <th>Shooms</th>
               <th>Status</th>
-              <th>Revive</th>
-              <th>FullGrow</th>
-              <th>ChangeColor</th>
-              <th>PartialGrow</th>
             </tr>
           </thead>
           <tbody>
