@@ -800,6 +800,8 @@
   setInterval(fetchScores, 60000);
   checkLogin();
 
+  document.getElementById("shoomRate").addEventListener("input", updateEarningTable);
+
   function copyScript() {
     const token = localStorage.getItem("userToken");
     if (!token) {
@@ -1022,9 +1024,7 @@
     `;
     
     document.getElementById("checkPcResult").innerHTML = tableHtml;
-
-  // ✅ ไม่เปิด modal ซ้ำ ใช้แค่คำนวณ
-  document.getElementById("shoomRate").addEventListener("input", updateEarningTable);
+  }
   
 </script>
 
