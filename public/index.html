@@ -973,22 +973,8 @@
       partial: 0
     };
   
-    let tableHtml = `
-      <div class="table-responsive">
-        <table class="table table-dark table-bordered table-hover">
-          <thead class="table-light text-center">
-            <tr>
-              <th>Player</th>
-              <th>Shooms</th>
-              <th>Status</th>
-              <th>Revive</th>
-              <th>FullGrow</th>
-              <th>ChangeColor</th>
-              <th>PartialGrow</th>
-            </tr>
-          </thead>
-          <tbody>
-    `;
+    let summaryHtml = ``;
+    let tableRows = ``;
   
     rows.forEach(row => {
       const device = row.children[2].innerText.trim();
@@ -1010,7 +996,7 @@
       result.colorchange += colorchange;
       result.partial += partial;
   
-      tableHtml += `
+      tableRows += `
         <tr class="text-center">
           <td>${player}</td>
           <td>${score.toLocaleString()}</td>
@@ -1023,14 +1009,18 @@
       `;
     });
   
-    let tableHtml = `
+    summaryHtml = `
       <div class="text-end mb-3">
-        <p><strong>Total:</strong></p>
+        <p><strong>📊 รวม:</strong></p>
         <p>Total Shooms: ${result.shooms.toLocaleString()}</p>
         <p>Total Accounts: ${result.total}</p>
         <p>Online: ${result.online} | Offline: ${result.offline}</p>
         <p>Revive: ${result.revive}, FullGrow: ${result.fullgrow}, ChangeColor: ${result.colorchange}, PartialGrow: ${result.partial}</p>
       </div>
+    `;
+  
+    const tableHtml = `
+      ${summaryHtml}
       <div class="table-responsive">
         <table class="table table-dark table-bordered table-hover">
           <thead class="table-light text-center">
@@ -1045,6 +1035,10 @@
             </tr>
           </thead>
           <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </div>
     `;
   
     document.getElementById("checkPcResult").innerHTML = tableHtml;
