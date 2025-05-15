@@ -165,8 +165,19 @@ app.get('/command', (req, res) => {
   if (!user) return res.status(401).send("Invalid token");
 
   const cmd = commands[user.username] || null;
-  delete commands[user.username]; // 🧼 ล้างหลังเรียก
-  res.json(cmd);
+  res.json(cmd); // 👈 แค่ส่งออก
+});
+
+app.post('/ack-command', (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).send("Missing token");
+
+  const users = loadUsers();
+  const user = users.find(u => u.token === token);
+  if (!user) return res.status(401).send("Invalid token");
+
+  delete commands[user.username]; // ✅ ค่อยลบตรงนี้
+  res.send("Acknowledged");
 });
 
 const PORT = process.env.PORT || 3000;
