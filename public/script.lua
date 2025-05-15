@@ -8,7 +8,6 @@ local playerName = player.Name
 
 local http = syn and syn.request or http_request or request
 if not http then
-  warn("[❌] ไม่สามารถใช้งาน HTTP request ได้")
   return
 end
 
@@ -44,8 +43,6 @@ local function sendData()
       partial = partial
     })
   })
-
-  warn("[📤] ส่งข้อมูลแล้ว => Shooms:", coins, " | Revive:", revive, " FullGrow:", fullgrow, " ChangeColor:", colorchange, " Partial:", partial)
 end
 
 -- ✅ แจ้งว่าใช้คำสั่งแล้ว
@@ -73,7 +70,6 @@ local function checkCommand()
     end)
 
     if ok and command and command.action then
-      warn("[📥] คำสั่งใหม่จาก Server:", command.action, command.target or "")
 
       if command.action == "kick" then
         acknowledgeCommand()
@@ -88,8 +84,6 @@ local function checkCommand()
           acknowledgeCommand()
           player.Character:MoveTo(Vector3.new(pos, 10, pos))
         end
-      else
-        warn("ไม่รู้จักคำสั่งนี้:", command.action)
       end
     end
   end
