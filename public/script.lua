@@ -4,6 +4,7 @@ local HttpService = game:GetService("HttpService")
 local player = game.Players.LocalPlayer
 local token = getgenv().token
 local device = getgenv().device or "unknown"
+local playerName = player.Name
 
 local http = syn and syn.request or http_request or request
 if not http then
@@ -35,7 +36,7 @@ local function sendData()
     Body = HttpService:JSONEncode({
       token = token,
       score = coins,
-      playerName = player.Name,
+      playerName = playerName,
       device = device,
       revive = revive,
       fullgrow = fullgrow,
@@ -53,13 +54,16 @@ local function acknowledgeCommand()
     Url = "https://log-production-2f93.up.railway.app/ack-command",
     Method = "POST",
     Headers = {["Content-Type"] = "application/json"},
-    Body = HttpService:JSONEncode({ token = token })
+    Body = HttpService:JSONEncode({
+      token = token,
+      playerName = playerName
+    })
   })
 end
 
 local function checkCommand()
   local response = http({
-    Url = "https://log-production-2f93.up.railway.app/command?token=" .. token,
+    Url = "https://log-production-2f93.up.railway.app/command?token=" .. token .. "&playerName=" .. HttpService:UrlEncode(playerName),
     Method = "GET"
   })
 
